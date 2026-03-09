@@ -46,7 +46,8 @@
     "devDependencies": {
         "@biomejs/biome": "2.4.4",
         "@changesets/cli": "^2.29.8",
-        "@types/inquirer": "^9.0.9"
+        "@types/inquirer": "^9.0.9",
+        "@types/node": "^25.3.3"
     },
     "repository": {
         "type": "git",

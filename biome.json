@@ -20,7 +20,10 @@
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "double"
+			"quoteStyle": "double",
+			"indentStyle": "tab",
+			"indentWidth": 4,
+			"trailingNewline": true
 		}
 	},
 	"assist": {
