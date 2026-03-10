@@ -26,12 +26,6 @@ program
 	.description("Resets flux in the current repository")
 	.action(resetFluxCommand);
 
-program
-	.command("look [message...]")
-	.description(
-		"Search brain dumps with a query using the new search algorithm",
-	)
-	.action(searchV2Command);
 
 program
 	.command("dump [message...]")
