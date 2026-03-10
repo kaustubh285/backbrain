@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 0.8.0
+
+### Minor Changes
+
+- c9fc428: Minor : Implement new Search logic
+
 ## 0.7.1
 
 ### Patch Changes
