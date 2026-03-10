@@ -49,8 +49,13 @@ export async function createIfNotExists(
 						fs.writeFileSync(folderPath, data);
 					}
 				} catch (writeError: any) {
-					if (writeError.code === "EACCES" || writeError.code === "EPERM") {
-						throw new Error(`No write permissions for file: ${folderPath}`);
+					if (
+						writeError.code === "EACCES" ||
+						writeError.code === "EPERM"
+					) {
+						throw new Error(
+							`No write permissions for file: ${folderPath}`,
+						);
 					}
 					throw writeError;
 				}
@@ -58,7 +63,10 @@ export async function createIfNotExists(
 				try {
 					fs.accessSync(folderPath, fs.constants.W_OK);
 				} catch (accessError: any) {
-					if (accessError.code === "EACCES" || accessError.code === "EPERM") {
+					if (
+						accessError.code === "EACCES" ||
+						accessError.code === "EPERM"
+					) {
 						throw new Error(
 							`No write permissions for directory: ${folderPath}`,
 						);
@@ -104,4 +112,14 @@ export async function getAllBrainDumpFilePaths(
 	return files
 		.filter((file) => file.endsWith(".json"))
 		.map((file) => path.join(fluxPath + FLUX_BRAIN_DUMP_PATH, file));
+}
+
+export async function init() {
+	const fluxPath = await getFluxPath();
+	const config = await getConfigFile(fluxPath);
+
+	return {
+		fluxPath,
+		config,
+	};
 }

@@ -11,6 +11,7 @@ import {
 	searchResultFormat,
 } from "../utils";
 import { createFuseInstance } from "../utils/fuse.instance";
+import { searchV2Helper } from "@/utils/search/helper";
 
 export async function searchBrainDumpCommand(query: string[]) {
 	console.log("Searching all brain dumps...");
@@ -18,7 +19,15 @@ export async function searchBrainDumpCommand(query: string[]) {
 	const config = await getConfigFile(fluxPath);
 	const combinedQuery = query.join(" ").trim();
 
-	const searchResults: Array<{ item: BrainDump; score?: number }> = [];
+	const searchResults: Array<{
+		item: BrainDump; scores?: {
+			fuzzyMatch: Number;
+			recency: Number;
+			gitContext: Number;
+			tagMatch: Number;
+			final: Number;
+		}
+	}> = [];
 	const allFilePaths = await getAllBrainDumpFilePaths(fluxPath);
 
 	if (combinedQuery) {
@@ -29,7 +38,7 @@ export async function searchBrainDumpCommand(query: string[]) {
 				);
 				const fuse = createFuseInstance(fileData.dumps, config);
 				const results = fuse.search(searchQuery);
-				searchResults.push(...results);
+				searchResults.push(...await searchV2Helper(config, results));
 			}
 		}
 	} else {
@@ -41,14 +50,21 @@ export async function searchBrainDumpCommand(query: string[]) {
 				.filter((dump) => dump && dump.message && dump.message.trim() !== "")
 				.map((dump) => ({
 					item: dump,
-					score: 0,
+					scores: {
+						fuzzyMatch: 0,
+						recency: 0,
+						gitContext: 0,
+						tagMatch: 0,
+						final: 0,
+					},
 					timestamp: new Date(dump.timestamp).getTime(),
 				}));
-			searchResults.push(...recentDumps);
+			searchResults.push(...await searchV2Helper(config, recentDumps));
 		}
 	}
+
 	if (combinedQuery) {
-		searchResults.sort((a, b) => (a.score || 0) - (b.score || 0));
+		searchResults.sort((a, b) => Number(b.scores?.final || 0) - Number(a.scores?.final || 0));
 	} else {
 		searchResults.sort((a, b) => {
 			const timeA = new Date(a.item.timestamp).getTime();

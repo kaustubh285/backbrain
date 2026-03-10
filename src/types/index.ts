@@ -39,3 +39,5 @@ export type BrainDumpOptions = {
 	tasks?: boolean;
 	tag?: string;
 };
+
+export type searchTypes = "default" | "tags" | "time" | "branch";

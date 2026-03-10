@@ -2,9 +2,15 @@
 
 **A git-aware CLI context manager for ADHD developers**
 
-> *Never lose track of what you were coding after interruptions again.*
+> *Never lose track of what you were coding after interruptions again. Now with intelligent, context-aware search.*
+
 
 flux-cap is a terminal-native tool that captures your thoughts, tracks your context, and integrates seamlessly with your git workflow. Built specifically for developers who context-switch frequently.
+
+### Recent Releases:
+- **v0.8.0:** Search 2.0 - Intelligent multi-signal ranking with context awareness
+- **v0.7.0:** Batch searches with combinedQuery and result sorting
+
 
 ## Installation
 
@@ -41,20 +47,25 @@ flux dump -n "team meeting at 3pm tomorrow"      # Notes
 flux dump -t "refactor payment processing logic" # Tasks
 ```
 
-### 3. Search your brain dumps
+### 3. Search your brain dumps with intelligent ranking
 
-![https://github.com/kaustubh285/flux-cap/blob/main/images/v0.6-search-output.png](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.6-search-output.png)
+flux-cap now features **Search 2.0** - intelligent, context-aware search that prioritizes:
+- 🔥 **Recent dumps** (exponential decay scoring)
+- ⭐ **Same git branch** as your current work
+- 📁 **Same working directory** context
+- 🏷️ **Exact tag matches** (coming in v0.8.0)
+
+![Search 2.0 Demo - Context-aware ranking](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.8-search-v2-demo.png)
 
 ```bash
-# Search with a query
-flux search auth
+# Smart context-aware search (NEW in v0.8.0!)
+flux search auth                    # Prioritizes recent + current branch matches
 
-# Search by tags (when implemented in search)
-flux search ideas
-flux search tasks
+# Coming in v0.8.2: Convenience commands
+flux recent                         # Last 10 dumps
+flux here                          # Current branch + directory
+flux notes                         # All note-tagged dumps
 
-# List recent dumps (no query)
-flux search
 ```
 
 ## Features
@@ -66,12 +77,13 @@ flux search
 - Monthly file organization for easy browsing
 - Privacy-first design - you control what gets tracked
 
-### Intelligent Search
-- Fuzzy search across all your brain dumps: `flux search "auth"`
-- **Tag-aware searching** for filtering by type
-- Configurable search fields (message, branch, working directory, tags)
-- Result ranking with relevance scores
-- Multi-month search with automatic limits
+### Intelligent Search 2.0 🚀
+- **Multi-signal ranking**: Combines fuzzy matching, recency, and git context
+- **Smart defaults**: Recent dumps + current branch automatically ranked higher  
+- **Context-aware**: Prioritizes dumps from your current branch and directory
+- **Debug mode**: `--debug` flag shows detailed scoring breakdown
+- **Flexible filtering**: `--all`, `--since`, `--branch` flags override smart defaults
+- **Fast & local**: No external APIs, blazing fast search results
 
 ### Privacy Controls
 - Choose what information to track during setup
@@ -131,6 +143,7 @@ flux dump --tag thought "my message"
 flux dump --tag bug "found an issue"
 flux dump --tag meeting "standup notes"
 ```
+
 
 ### Tag Examples
 ```bash
@@ -329,7 +342,10 @@ src/
 
 ## Roadmap
 
-### Phase 2 (Coming Soon)
+### Phase 2 (v0.8.0 - Coming Soon)
+- [ ] Convenience search commands (`flux recent`, `flux here`, `flux notes`)
+- [ ] Tag match scoring integration
+- [ ] Grouped result display by relevance
 - [ ] Enhanced tag-based search filtering
 - [ ] ASCII Pomodoro timer with themes
 - [ ] Visual focus mode display

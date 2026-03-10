@@ -51,7 +51,15 @@ function formatMessageForDisplay(message: string): string {
 }
 
 export function displaySearchResults(
-	results: Array<{ item: BrainDump; score?: number }>,
+	results: Array<{
+		item: BrainDump; scores?: {
+			fuzzyMatch: Number;
+			recency: Number;
+			gitContext: Number;
+			tagMatch: Number;
+			final: Number;
+		}
+	}>,
 	query?: string,
 ) {
 	if (results.length === 0) {
@@ -84,7 +92,7 @@ export function displaySearchResults(
 
 	results.forEach((result, index) => {
 		const dump = result.item;
-		const score = result.score?.toFixed(2) || "0.00";
+		const score = result.scores?.final?.toFixed(2) || "0.00";
 		const shortId = dump.id.substring(0, 8);
 		const timeAgo = getTimeAgo(new Date(dump.timestamp));
 
@@ -109,10 +117,16 @@ export function displaySearchResults(
 				console.log(`${messageIndent}${line}`);
 			});
 		}
+		const contextTags = [];
+		if ((result?.scores?.recency as number) > 0.8) { contextTags.push('recent'); }
+		if ((result?.scores?.gitContext as number) >= 1.0) { contextTags.push('same-branch'); }
+		if ((result?.scores?.gitContext as number) >= 1.5) { contextTags.push('same-dir'); }
 
-		if (dump?.tags?.length) {
-			const tagsLine = `[${dump.tags.join(", ")}]`;
-			console.log(`${messageIndent}\x1b[36m${tagsLine}\x1b[0m`); // Cyan for tags
+		const allTags = [...contextTags, ...(dump?.tags || [])];
+
+		if (allTags.length > 0) {
+			const tagsLine = `[${allTags.join(", ")}]`;
+			console.log(`${messageIndent}\x1b[36m${tagsLine}\x1b[0m`);
 		}
 
 		if (dump.branch && dump.branch !== "main") {
