@@ -1,0 +1,262 @@
+# llms.txt for flux-cap
+# A git-aware CLI context manager for ADHD developers
+# Project: https://github.com/kaustubh285/flux-cap
+# Package: @dev_desh/flux-cap
+# Generated: 2026-01-19
+**Latest:** Search 2.0 - Intelligent context-aware search with multi-signal ranking
+
+---
+
+## PROJECT OVERVIEW
+
+**Name:** flux-cap
+**Description:** Git-aware CLI context manager for ADHD developers
+**Version:** 0.7.0
+**Author:** Kaustubh Deshpande
+**License:** MIT
+**Repository:** https://github.com/kaustubh285/flux-cap
+**NPM Package:** @dev_desh/flux-cap
+
+**Purpose:** A terminal-native tool that captures developer thoughts, tracks context, and integrates seamlessly with git workflow. Built specifically for developers who context-switch frequently and need to maintain mental state across interruptions.
+
+**Target Users:** Software developers, particularly those with ADHD or frequent context-switching needs
+
+---
+
+## CORE FUNCTIONALITY
+
+### Commands Available:
+
+1. **flux init**
+   - Initialize flux-cap with privacy setup
+   - Creates `.flux/` directory structure
+   - Interactive privacy configuration
+
+2. **flux dump [message...] [options]**
+   - Capture brain dumps with git context
+   - Options:
+     - `-m, --multiline` - Enable multiline input mode
+     - `-n, --notes` - Tag as note
+     - `-i, --ideas` - Tag as idea
+     - `-t, --tasks` - Tag as task
+   - Automatically captures: timestamp, git branch, working directory, uncommitted changes
+
+3. **flux search [query...]**
+   - Fuzzy search across all brain dumps
+   - Multi-field search (message, branch, workingDir, tags, id)
+   - Configurable result limits and scoring
+
+4.  **flux search [query...] [flags]** (Search 2.0)
+   - Intelligent multi-signal ranking system
+   - Combines fuzzy matching + recency + git context scoring
+   - Smart defaults: recent dumps + current branch ranked higher
+   - Flags: --debug, --all, --since, --branch, -n
+   - Multi-field search (message, branch, workingDir, tags, id)
+
+5. **flux reset**
+   - Complete reset (deletes all data)
+
+### Key Features:
+
+- **Brain Dump System:** Instant thought capture without breaking development flow
+- **Git Integration:** Automatic branch detection, uncommitted changes tracking
+- **Tag System:** Built-in tags (ideas, notes, tasks) + custom tags
+- **Privacy Controls:** Configurable data tracking (hide paths, branches, git status)
+- **Search Engine:** Fuse.js powered fuzzy search with relevance scoring
+- **Parent Directory Support:** Works project-wide from any subdirectory
+- **Data Organization:** Monthly JSON files, human-readable format
+
+---
+
+## TECHNICAL ARCHITECTURE
+
+**Runtime:** Node.js (>=18.0.0), built with Bun
+**Language:** TypeScript
+**CLI Framework:** Commander.js
+**Search Engine:** Fuse.js
+**Dependencies:** Minimal (inquirer for interactive prompts)
+
+**Data Structure:**
+```
+.flux/
+├── config.json          # Configuration
+├── dumps/               # Monthly brain dump files
+│   ├── 2026-01.json
+│   └── 2026-02.json
+└── sessions/            # Future: Focus session tracking
+```
+
+**Brain Dump Format:**
+```json
+{
+  "id": "uuid",
+  "timestamp": "ISO8601",
+  "message": "string",
+  "tags": ["array", "of", "strings"],
+  "workingDir": "path",
+  "branch": "git-branch",
+  "hasUncommittedChanges": boolean
+}
+```
+
+---
+
+## DEVELOPMENT HISTORY
+
+### Recent Releases:
+### Recent Releases:
+- **v0.8.0:**  Search 2.0 - Multi-signal ranking with recency + git context scoring
+
+- **v0.7.0:** Batch searches with combinedQuery and result sorting
+- **v0.6.0:** Major search improvements
+- **v0.5.0:** Custom tag usage implementation
+- **v0.4.0:** Tag support for brain dumps
+- **v0.3.0:** ID added to searchable fields
+- **v0.2.0:** Multiline support improvements
+- **v0.1.0:** Initial release with Changesets integration
+
+### Development Practices:
+- Semantic versioning with Changesets
+- TypeScript for type safety
+- MIT licensed open source
+- GitHub Actions for CI/CD
+
+---
+
+## USE CASES & EXAMPLES
+
+### Context Switching:
+```bash
+# Before task switch
+flux dump -t "was debugging auth middleware, next: implement rate limiting"
+
+# After interruption
+flux search "auth"  # Find where you left off
+```
+
+### Idea Capture:
+```bash
+flux dump -i "add keyboard shortcuts to dashboard"
+flux dump -i "implement real-time collaboration features"
+```
+
+### Bug Tracking:
+```bash
+flux dump -n "weird payment flow bug - users can't checkout on mobile"
+flux search "payment bug"  # Later retrieval
+```
+
+### Meeting Notes:
+```bash
+flux dump -n "team standup: focus on performance optimization this sprint"
+```
+
+---
+
+## PRIVACY & DATA HANDLING
+
+**Privacy-First Design:**
+- All data stored locally in human-readable JSON
+- No external API calls or data transmission
+- User controls what git information is captured
+- Configurable privacy settings:
+  - Hide working directory paths
+  - Hide git branch names
+  - Hide uncommitted changes status
+
+**Data Location:** `.flux/` directory in project root
+**Data Format:** JSON (easily editable/exportable)
+**Data Retention:** User controlled (manual deletion)
+
+---
+
+## CONFIGURATION OPTIONS
+
+### Privacy Settings:
+```json
+{
+  "privacy": {
+    "hideWorkingDir": false,
+    "hideBranchName": false,
+    "hideUncommittedChanges": false
+  }
+}
+```
+
+### Search Configuration:
+```json
+{
+  "search": {
+    "searchFields": ["message", "branch", "workingDir", "tags", "id"],
+    "resultLimit": 10,
+    "fuseOptions": {
+      "threshold": 0.3,
+      "includeScore": true
+    }
+  }
+}
+```
+
+### Custom Tags:
+```json
+{
+  "tags": ["bug", "meeting", "review", "urgent"]
+}
+```
+
+---
+
+## ROADMAP
+
+### Phase 2 (In Development):
+- Enhanced tag-based search filtering
+- ASCII Pomodoro timer with themes
+- Visual focus mode display
+
+### Phase 3 (Planned):
+- Advanced git context switching
+- Session restoration
+- Time tracking per context
+- Tag analytics and insights
+
+### Phase 4 (Future):
+- AI-powered brain dump analysis
+- Team collaboration features
+- Cross-machine synchronization
+- Smart tag suggestions
+
+---
+
+## LLM USAGE PERMISSIONS
+
+**Allowed:**
+- Reference this project in discussions about developer productivity tools
+- Use code examples for educational purposes (with attribution)
+- Suggest improvements or similar tools
+- Explain concepts and architecture described herein
+
+**Attribution Required For:**
+- Direct code quotations
+- Architecture descriptions
+- Feature explanations
+- Use case examples
+
+**Prohibited:**
+- Training on this codebase without explicit permission
+- Reproducing substantial portions without attribution
+- Commercial derivative works without proper licensing
+
+**Contact:** For questions about usage permissions, refer to MIT License terms or contact the repository maintainers.
+
+---
+
+## RELATED CONCEPTS
+
+**Developer Tools:** CLI productivity, git workflow, context management
+**Target Audience:** ADHD developers, context-switchers, rapid prototypers
+**Problem Domain:** Attention management, thought capture, development flow
+**Technical Category:** Node.js CLI tools, developer experience, productivity software
+
+---
+
+*This llms.txt file represents the current state of flux-cap as of January 2026. For the most up-to-date information, consult the GitHub repository and NPM package.*
