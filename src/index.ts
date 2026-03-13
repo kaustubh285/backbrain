@@ -8,6 +8,7 @@ import { initFluxCommand, resetFluxCommand } from "./commands/init.command";
 import { searchBrainDumpCommand } from "./commands/search.command";
 import { getFluxPath } from "./utils";
 import { searchV2Command } from "./commands/search.v2.command";
+import { tuiCommand } from "./commands/ui.command";
 const program = new Command();
 
 program
@@ -16,7 +17,8 @@ program
 	.version(packageJson.version);
 
 program
-	.command("init")
+	.command("i")
+	.alias("init")
 	.option("-y, --yes", "Accept all default options for initialization")
 	.description("Initialize flux in the current repository")
 	.action(initFluxCommand);
@@ -28,7 +30,8 @@ program
 
 
 program
-	.command("dump [message...]")
+	.command("d [message...]")
+	.alias("dump")
 	.option("-m, --multiline", "Enable multiline input mode")
 	.option("-n, --notes", "Jot down a note")
 	.option("-i, --important", "Jot down a link")
@@ -45,7 +48,8 @@ program
 	});
 
 program
-	.command("search [query...]")
+	.command("s [query...]")
+	.alias("search")
 	.description(
 		"Search brain dumps with a query. If no query is provided, lists all brain dumps for the current month.",
 	)
@@ -60,5 +64,12 @@ program
 		"Update configuration fields. Example: flux config search.limit 10",
 	)
 	.action(configCommand);
+
+
+program
+	.command("u")
+	.alias("ui")
+	.description("Open interactive search TUI")
+	.action(tuiCommand);
 
 program.parse(process.argv);

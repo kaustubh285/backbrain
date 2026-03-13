@@ -41,3 +41,14 @@ export type BrainDumpOptions = {
 };
 
 export type searchTypes = "default" | "tags" | "time" | "branch";
+
+export type SearchResult = {
+	item: BrainDump;
+	scores?: {
+		fuzzyMatch: number;
+		recency: number;
+		gitContext: number;
+		tagMatch: number;
+		final: number;
+	};
+};
