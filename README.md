@@ -46,16 +46,58 @@ flux dump -i "add dark mode toggle"              # Ideas
 flux dump -n "team meeting at 3pm tomorrow"      # Notes  
 flux dump -t "refactor payment processing logic" # Tasks
 ```
+## 3. **New TUI Section** (add after Commands)
+
+## Interactive TUI
+
+Flux-Cap includes a terminal user interface for interactive searching:
+
+![TUI Screenshot](images/tui-demo.png)
+
+### Features
+- **Real-time Search**: Results update as you type
+- **SearchV2 Integration**: Same scoring system as CLI search
+- **Professional Layout**: Fixed table format matching CLI output
+- **Context Tags**: Visual indicators for recent, same-branch, same-dir
+- **Stable Interface**: Fixed height prevents layout jumps
+- **Slash Commands**: Type `/exit` to quit cleanly
+
+### Usage
+```bash
+# Start interactive search
+flux u
+
+# Search and navigate
+# Type query -> See results instantly
+# /exit -> Quit cleanly
+```
 
 ### 3. Search your brain dumps with intelligent ranking
 
 flux-cap now features **Search 2.0** - intelligent, context-aware search that prioritizes:
-- 🔥 **Recent dumps** (exponential decay scoring)
-- ⭐ **Same git branch** as your current work
-- 📁 **Same working directory** context
-- 🏷️ **Exact tag matches** (coming in v0.8.0)
+- **Recent dumps** (exponential decay scoring)
+- **Same git branch** as your current work
+- **Same working directory** context
+- **Exact tag matches** (coming in v0.8.0)
+- **Quick Brain Dumps**: Capture thoughts instantly with git context
+- **SearchV2**: Multi-signal ranking (fuzzy + recency + git context)
+- **Interactive TUI**: Real-time search with professional interface
+- **Smart Scoring**: See relevance scores and context indicators
 
-![Search 2.0 Demo - Context-aware ranking](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.8-search-v2-demo.png)
+
+## 📸 Screenshots
+
+### CLI Search
+![CLI Search](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.8-search-v2-demo.png)
+
+
+### Interactive TUI  
+![TUI Interface]([images/tui-interface.png](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.6-search-output.png))
+
+
+### Search Comparison
+![Search Demo]([images/search-comparison.gif](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.9-interactive.mov)
+
 
 ```bash
 # Smart context-aware search (NEW in v0.8.0!)
@@ -84,6 +126,12 @@ flux notes                         # All note-tagged dumps
 - **Debug mode**: `--debug` flag shows detailed scoring breakdown
 - **Flexible filtering**: `--all`, `--since`, `--branch` flags override smart defaults
 - **Fast & local**: No external APIs, blazing fast search results
+
+### Interactive Search
+```bash
+flux u          # Open interactive TUI search
+flux ui         # Same as above (alias)
+```
 
 ### Privacy Controls
 - Choose what information to track during setup

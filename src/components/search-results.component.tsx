@@ -34,14 +34,14 @@ export const SearchResults = ({
 	return (
 		<Box flexDirection="column" padding={1} height="100%">
 			{/* <Box borderStyle="single" borderColor="gray" marginBottom={1}> */}
-			<Box marginBottom={1}>
+			{/*<Box marginBottom={1}>
 				<Text color="white">
 					{query
 						? ` Found ${results.length} brain dump${results.length === 1 ? '' : 's'} matching "${query}"`
 						: ` Showing ${results.length} recent brain dumps`
 					}
 				</Text>
-			</Box>
+			</Box>*/}
 
 			<Box marginBottom={1}>
 				<Text color="gray">#  ID        SCORE   TIME        MESSAGE</Text>
