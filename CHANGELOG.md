@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 0.9.0
+
+### Minor Changes
+
+- 8990ec7: MINOR: Add TUI interactive search with Ink
+
 ## 0.8.0
 
 ### Minor Changes
