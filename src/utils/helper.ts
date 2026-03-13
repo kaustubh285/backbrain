@@ -1,5 +1,5 @@
 import { brainDumpAddCommand } from "../commands/dump.command";
-import type { BrainDump } from "../types";
+import type { BrainDump, SearchResult } from "../types";
 
 export function getMonthString(): string {
 	const currentDate = new Date();
@@ -117,10 +117,7 @@ export function displaySearchResults(
 				console.log(`${messageIndent}${line}`);
 			});
 		}
-		const contextTags = [];
-		if ((result?.scores?.recency as number) > 0.8) { contextTags.push('recent'); }
-		if ((result?.scores?.gitContext as number) >= 1.0) { contextTags.push('same-branch'); }
-		if ((result?.scores?.gitContext as number) >= 1.5) { contextTags.push('same-dir'); }
+		const contextTags = getContextTags(result as SearchResult);
 
 		const allTags = [...contextTags, ...(dump?.tags || [])];
 
@@ -140,7 +137,7 @@ export function displaySearchResults(
 	);
 }
 
-function getTimeAgo(date: Date): string {
+export function getTimeAgo(date: Date): string {
 	const now = new Date();
 	const diffMs = now.getTime() - date.getTime();
 	const diffMins = Math.floor(diffMs / (1000 * 60));
@@ -153,3 +150,13 @@ function getTimeAgo(date: Date): string {
 
 	return date.toLocaleDateString();
 }
+
+export const getContextTags = (result: SearchResult): string[] => {
+	const contextTags = [];
+	if (result.scores) {
+		if (result.scores.recency > 0.8) contextTags.push('recent');
+		if (result.scores.gitContext >= 1.0) contextTags.push('same-branch');
+		if (result.scores.gitContext >= 1.5) contextTags.push('same-dir');
+	}
+	return contextTags;
+};
