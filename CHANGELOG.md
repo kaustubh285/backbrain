@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 0.10.1
+
+### Patch Changes
+
+- 63964b2: Major : Stable V1.0.0 Release
+
 ## 0.10.0
 
 ### Minor Changes
