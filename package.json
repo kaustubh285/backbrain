@@ -1,64 +1,67 @@
 {
-    "name": "@dev_desh/flux-cap",
-    "type": "module",
-    "version": "0.9.1",
-    "description": "Git-aware CLI context manager for ADHD developers",
-    "bin": {
-        "flux": "./dist/index.js"
-    },
-    "files": [
-        "dist/**/*",
-        "README.md",
-        "LICENSE"
-    ],
-    "scripts": {
-        "build": "bun build src/index.ts --outdir dist --target node --format esm",
-        "dev": "bun run src/index.ts",
-        "prepublishOnly": "bun run build",
-        "publish": "npm publish --access=public",
-        "local-install": "bun run build && npm link",
-        "local-uninstall": "npm unlink -g flux-cap",
-        "local-reinstall": "bun run local-uninstall && bun run local-install",
-        "changeset": "changeset",
-        "changeset:add": "changeset add",
-        "changeset:status": "changeset status",
-        "changeset:version": "changeset version",
-        "changeset:publish": "changeset publish",
-        "format": "bunx --bun @biomejs/biome check --write"
-    },
-    "engines": {
-        "node": ">=18.0.0"
-    },
-    "keywords": [
-        "cli",
-        "productivity",
-        "adhd",
-        "git",
-        "context-switching",
-        "brain-dump",
-        "developer-tools"
-    ],
-    "dependencies": {
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
-        "commander": "^14.0.3",
-        "fuse.js": "^7.1.0",
-        "ink": "^6.8.0",
-        "ink-text-input": "^6.0.0",
-        "inquirer": "^13.2.5",
-        "react": "^19.2.4",
-        "react-devtools-core": "^7.0.1",
-        "react-dom": "^19.2.4"
-    },
-    "devDependencies": {
-        "@biomejs/biome": "2.4.4",
-        "@changesets/cli": "^2.29.8",
-        "@types/inquirer": "^9.0.9",
-        "@types/node": "^25.3.3"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/kaustubh285/flux-cap"
-    },
-    "license": "MIT"
+	"name": "@dev_desh/flux-cap",
+	"type": "module",
+	"version": "0.9.1",
+	"description": "Git-aware CLI context manager for ADHD developers",
+	"bin": {
+		"flux": "./dist/index.js"
+	},
+	"files": [
+		"dist/**/*",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "bun build src/index.ts --outdir dist --target node --format esm --external @rezi-ui/core --external @rezi-ui/node --external @rezi-ui/jsx --external @rezi-ui/native",
+		"dev": "bun run src/index.ts",
+		"prepublishOnly": "bun run build",
+		"publish": "npm publish --access=public",
+		"local-install": "bun run build && npm link",
+		"local-uninstall": "npm unlink -g flux-cap",
+		"local-reinstall": "bun run local-uninstall && bun run local-install",
+		"changeset": "changeset",
+		"changeset:add": "changeset add",
+		"changeset:status": "changeset status",
+		"changeset:version": "changeset version",
+		"changeset:publish": "changeset publish",
+		"format": "bunx --bun @biomejs/biome check --write"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	},
+	"keywords": [
+		"cli",
+		"productivity",
+		"adhd",
+		"git",
+		"context-switching",
+		"brain-dump",
+		"developer-tools"
+	],
+	"dependencies": {
+		"@rezi-ui/core": "^0.1.0-alpha.59",
+		"@rezi-ui/jsx": "^0.1.0-alpha.59",
+		"@rezi-ui/node": "^0.1.0-alpha.59",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"commander": "^14.0.3",
+		"fuse.js": "^7.1.0",
+		"ink": "^6.8.0",
+		"ink-text-input": "^6.0.0",
+		"inquirer": "^13.2.5",
+		"react": "^19.2.4",
+		"react-devtools-core": "^7.0.1",
+		"react-dom": "^19.2.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.4",
+		"@changesets/cli": "^2.29.8",
+		"@types/inquirer": "^9.0.9",
+		"@types/node": "^25.3.3"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kaustubh285/flux-cap"
+	},
+	"license": "MIT"
 }

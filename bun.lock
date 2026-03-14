@@ -5,6 +5,9 @@
     "": {
       "name": "flux-cap",
       "dependencies": {
+        "@rezi-ui/core": "^0.1.0-alpha.59",
+        "@rezi-ui/jsx": "^0.1.0-alpha.59",
+        "@rezi-ui/node": "^0.1.0-alpha.59",
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
         "commander": "^14.0.3",
@@ -122,6 +125,14 @@
     "@nodelib/fs.stat": ["@nodelib/fs.stat@2.0.5", "", {}, "sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A=="],
 
     "@nodelib/fs.walk": ["@nodelib/fs.walk@1.2.8", "", { "dependencies": { "@nodelib/fs.scandir": "2.1.5", "fastq": "^1.6.0" } }, "sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg=="],
+
+    "@rezi-ui/core": ["@rezi-ui/core@0.1.0-alpha.59", "", {}, "sha512-2hDGLQouRI2LBBqU4IjpRWw931v7brFo0r/JnOvD8LCHoSk5aYt/B06O2kiE5ZbDz84EzAOY3QUzcyOYf1xxEg=="],
+
+    "@rezi-ui/jsx": ["@rezi-ui/jsx@0.1.0-alpha.59", "", { "dependencies": { "@rezi-ui/core": "0.1.0-alpha.59" } }, "sha512-Tc/JsPEuPJxGwh0EB6KRPEt0dTwk4YYFsT2F/qgxPqnvPXUqJoTdHRBtfkHKZdx/fKazWaO9HP3sw4X40XcfZQ=="],
+
+    "@rezi-ui/native": ["@rezi-ui/native@0.1.0-alpha.59", "", {}, "sha512-dSz92BT2NQnKQi3fZi5Zx8+A9duzU9lePPyxV0xaEVRK8wHvk3HLkUYWSEAbQlMsn3zuk0tFnWxY9Re9ID4fOQ=="],
+
+    "@rezi-ui/node": ["@rezi-ui/node@0.1.0-alpha.59", "", { "dependencies": { "@rezi-ui/core": "0.1.0-alpha.59", "@rezi-ui/native": "0.1.0-alpha.59" } }, "sha512-xDjfAeEl48Tw6VbrAeKxVFNet9Wq4iRdZlW0PlcTl0IYOVVcFsI24yIv3xrTon9gL1yiYuKci+kn12HW3Sskig=="],
 
     "@types/inquirer": ["@types/inquirer@9.0.9", "", { "dependencies": { "@types/through": "*", "rxjs": "^7.2.0" } }, "sha512-/mWx5136gts2Z2e5izdoRCo46lPp5TMs9R15GTSsgg/XnZyxDWVqoVU3R9lWnccKpqwsJLvRoxbCjoJtZB7DSw=="],
 
