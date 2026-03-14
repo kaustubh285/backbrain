@@ -1,15 +1,29 @@
 # flux-cap
 
-**A git-aware CLI context manager for ADHD developers**
+> Loosing your train of thought often? flux-cap is a git-aware brain dump CLI for developers who context-switch with intelligent search and a lazygit-inspired TUI built in.
 
-> *Never lose track of what you were coding after interruptions again. Now with intelligent, context-aware search.*
+---
+
+### How this was built
+
+flux-cap is a personal project built incrementally over several weeks — not generated in one shot. The search algorithm (`searchV2Helper`) was designed from first principles: Fuse.js scores are inverted and weighted, recency uses exponential decay (`e^(-days/7)`), and git context gets a dynamic boost multiplier when you have uncommitted changes. The TUI was built twice — once in Ink, once in Rezi — to compare performance and ergonomics firsthand.
+
+The commit history tells the story better than this paragraph.
+
+---
 
 
-flux-cap is a terminal-native tool that captures your thoughts, tracks your context, and integrates seamlessly with your git workflow. Built specifically for developers who context-switch frequently.
+[![npm version](https://img.shields.io/npm/v/@dev_desh/flux-cap)](https://www.npmjs.com/package/@dev_desh/flux-cap)
+[![npm downloads](https://img.shields.io/npm/dm/@dev_desh/flux-cap)](https://www.npmjs.com/package/@dev_desh/flux-cap)
+[![license](https://img.shields.io/npm/l/@dev_desh/flux-cap)](LICENSE)
 
-### Recent Releases:
-- **v0.8.0:** Search 2.0 - Intelligent multi-signal ranking with context awareness
-- **v0.7.0:** Batch searches with combinedQuery and result sorting
+**Now at v1.0.0** — with Search 2.0 multi-signal ranking, Ink-powered interactive TUI, and a Rezi-based lazygit-style interface.
+
+### What's new:
+- **v1.0.0:** First stable release
+- **v0.10.0:** Rezi-based lazygit-style TUI (`flux u`)
+- **v0.9.0:** Ink-powered interactive search TUI (`flux ui-ink`)
+- **v0.8.0:** Search 2.0 — multi-signal ranking with git context awareness
 
 
 ## Installation
@@ -38,13 +52,13 @@ flux init
 ### 2. Start capturing thoughts with tags
 ```bash
 # Basic brain dumps
-flux dump "remember to add error handling to auth module"
-flux dump "bug in user validation - check line 42" 
+flux d "remember to add error handling to auth module"
+flux d "bug in user validation - check line 42" 
 
 # Tagged brain dumps for better organization
-flux dump -i "add dark mode toggle"              # Ideas
-flux dump -n "team meeting at 3pm tomorrow"      # Notes  
-flux dump -t "refactor payment processing logic" # Tasks
+flux d -i "add dark mode toggle"              # Ideas
+flux d -n "team meeting at 3pm tomorrow"      # Notes  
+flux d -t "refactor payment processing logic" # Tasks
 ```
 ## 3. **New TUI Section** (add after Commands)
 
@@ -52,7 +66,7 @@ flux dump -t "refactor payment processing logic" # Tasks
 
 Flux-Cap includes a terminal user interface for interactive searching:
 
-![TUI Screenshot](images/tui-demo.png)
+![TUI Interface](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.10-rezi-interactive.png)
 
 ### Features
 - **Real-time Search**: Results update as you type
@@ -78,7 +92,7 @@ flux-cap now features **Search 2.0** - intelligent, context-aware search that pr
 - **Recent dumps** (exponential decay scoring)
 - **Same git branch** as your current work
 - **Same working directory** context
-- **Exact tag matches** (coming in v0.8.0)
+- **Exact tag matches** search for specific tag/branch
 - **Quick Brain Dumps**: Capture thoughts instantly with git context
 - **SearchV2**: Multi-signal ranking (fuzzy + recency + git context)
 - **Interactive TUI**: Real-time search with professional interface
@@ -92,11 +106,11 @@ flux-cap now features **Search 2.0** - intelligent, context-aware search that pr
 
 
 ### Interactive TUI  
-![TUI Interface]([images/tui-interface.png](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.6-search-output.png))
+![TUI Interface](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.10-rezi-interactive.png)
 
 
 ### Search Comparison
-![Search Demo]([images/search-comparison.gif](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.9-interactive.mov)
+![TUI Demo](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.10-rezi-interactive.gif)
 
 
 ```bash
@@ -113,7 +127,7 @@ flux notes                         # All note-tagged dumps
 ## Features
 
 ### Brain Dump System with Smart Tags
-- Instantly capture thoughts without breaking flow: `flux dump "fix auth validation bug"`
+- Instantly capture thoughts without breaking flow: `flux d fix auth validation bug`
 - **Tag system** for better organization: `-i` for ideas, `-n` for notes, `-t` for tasks
 - Git-aware context tracking (branch, working directory, uncommitted changes)
 - Monthly file organization for easy browsing
@@ -156,18 +170,18 @@ flux ui         # Same as above (alias)
 | Command | Description | Example |
 |---------|-------------|---------|
 | `flux init` | Initialize flux-cap with privacy setup | `flux init` |
+| `flux d <message...>` | Capture a brain dump | `flux dump "fix the bug in auth.ts"` |
 | `flux dump <message...>` | Capture a brain dump | `flux dump "fix the bug in auth.ts"` |
-| `flux dump -i <message...>` | Capture important | `flux dump -i "add keyboard shortcuts"` |
-| `flux dump -d <message...>` | Capture an idea | `flux dump -d "a new cli tool project"` |
-| `flux dump -l <message...>` | Capture a link | `flux dump -l "https://github.com/kaustubh285/flux-cap"` |
-| `flux dump -b <message...>` | Capture a bug | `flux dump -b "tsconfig mismatch"` |
-| `flux dump -n <message...>` | Capture a note | `flux dump -n "meeting notes from standup"` |
-| `flux dump -t <message...>` | Capture a task | `flux dump -t "refactor user authentication"` |
-| `flux dump -m` | Multiline input mode | `flux dump -m` |
+| `flux d -i <message...>` | Capture important | `flux dump -i "add keyboard shortcuts"` |
+| `flux d -d <message...>` | Capture an idea | `flux dump -d "a new cli tool project"` |
+| `flux d -l <message...>` | Capture a link | `flux dump -l "https://github.com/kaustubh285/flux-cap"` |
+| `flux d -b <message...>` | Capture a bug | `flux dump -b "tsconfig mismatch"` |
+| `flux d -n <message...>` | Capture a note | `flux dump -n "meeting notes from standup"` |
+| `flux d -t <message...>` | Capture a task | `flux dump -t "refactor user authentication"` |
+| `flux d -m` | Multiline input mode | `flux dump -m` |
+| `flux s [query...]` | Search brain dumps or list recent ones | `flux search "authentication"` |
 | `flux search [query...]` | Search brain dumps or list recent ones | `flux search "authentication"` |
 | `flux config [field] [value]` | View or update configuration | `flux config search.resultLimit 20` |
-| `flux config --add-tag <tag>` | Add custom tags to configuration | `flux config --add-tag "bug"` |
-| `flux config --remove-tag <tag>` | Remove tags from configuration | `flux config --remove-tag "old-tag"` |
 | `flux reset` | Complete reset (deletes all data) | `flux reset` |
 
 ## Tag System
@@ -182,33 +196,33 @@ flux-cap comes with three built-in tag shortcuts:
 Extend your tagging system by adding custom tags for brain dumps:
 ```bash
 # Built-in shortcuts (current)
-flux dump -i "idea message"
-flux dump -n "note message" 
-flux dump -t "task message"
+flux d -i "idea message"
+flux d -n "note message" 
+flux d -t "task message"
 
 # Generic tag option (new)
-flux dump --tag thought "my message"
-flux dump --tag bug "found an issue"
-flux dump --tag meeting "standup notes"
+flux d --tag thought "my message"
+flux d --tag bug "found an issue"
+flux d --tag meeting "standup notes"
 ```
 
 
 ### Tag Examples
 ```bash
 # Ideas for future features
-flux dump -i "add real-time collaboration to the editor"
-flux dump -i "implement auto-save every 30 seconds"
+flux d -i "add real-time collaboration to the editor"
+flux d -i "implement auto-save every 30 seconds"
 
 # Meeting notes and reminders
-flux dump -n "team decided to use TypeScript for new components"
-flux dump -n "remember to update documentation before release"
+flux d -n "team decided to use TypeScript for new components"
+flux d -n "remember to update documentation before release"
 
 # Task tracking
-flux dump -t "fix memory leak in image processor"
-flux dump -t "write unit tests for authentication module"
+flux d -t "fix memory leak in image processor"
+flux d -t "write unit tests for authentication module"
 
 # Combine with multiline for detailed entries
-flux dump -t -m  # Opens editor for detailed task description
+flux d -t -m  # Opens editor for detailed task description
 ```
 
 ## Use Cases
@@ -216,22 +230,22 @@ flux dump -t -m  # Opens editor for detailed task description
 ### Context Switching
 ```bash
 # Before switching tasks
-flux dump -t "was working on user auth, next: add validation to login form"
+flux d -t "was working on user auth, next: add validation to login form"
 
 # After interruption  
-flux search "auth"  # Quickly find where you left off
-flux search "tasks" # Find your pending tasks
+flux s "auth"  # Quickly find where you left off
+flux s "tasks" # Find your pending tasks
 ```
 
 ### Bug Tracking & Ideas
 ```bash
 # Track bugs and investigations
-flux dump -n "weird bug in payment flow - users can't checkout"
-flux dump -n "bug seems related to session timeout - check Redis config"
+flux d -n "weird bug in payment flow - users can't checkout"
+flux d -n "bug seems related to session timeout - check Redis config"
 
 # Capture ideas as they come
-flux dump -i "add keyboard shortcuts to dashboard"
-flux dump -i "maybe use React.memo for performance optimization"
+flux d -i "add keyboard shortcuts to dashboard"
+flux d -i "maybe use React.memo for performance optimization"
 
 # Later...
 flux search "payment bug"
@@ -241,12 +255,12 @@ flux search "ideas"
 ### Meeting Notes & Task Management  
 ```bash
 # Capture meeting outcomes
-flux dump -n "team standup: focus on performance this sprint"
-flux dump -t "implement caching layer for API responses"
+flux d -n "team standup: focus on performance this sprint"
+flux d -t "implement caching layer for API responses"
 
 # Track follow-up tasks
-flux dump -t "review Sarah's PR for authentication changes"
-flux dump -t "update deployment documentation"
+flux d -t "review Sarah's PR for authentication changes"
+flux d -t "update deployment documentation"
 ```
 
 ## Configuration
@@ -373,6 +387,7 @@ Built with:
 - **TypeScript** - Type safety
 - **Commander.js** - CLI parsing
 - **Fuse.js** - Fuzzy search
+- **Rezi** - Terminal UI components
 
 ### Project Structure
 ```
@@ -380,6 +395,7 @@ src/
 ├── commands/           # Command implementations
 │   ├── dump.command.ts
 │   ├── search.command.ts
+│   ├── ui.command.ts
 │   └── init.command.ts
 ├── utils/             # Shared utilities
 │   ├── privacy.ts     # Git integration
@@ -390,14 +406,19 @@ src/
 
 ## Roadmap
 
-### Phase 2 (v0.8.0 - Coming Soon)
-- [ ] Convenience search commands (`flux recent`, `flux here`, `flux notes`)
-- [ ] Tag match scoring integration
-- [ ] Grouped result display by relevance
-- [ ] Enhanced tag-based search filtering
-- [ ] ASCII Pomodoro timer with themes
-- [ ] Visual focus mode display
-- [ ] Theme rotation system
+### ✅ Shipped
+- [x] SearchV2 multi-signal ranking (fuzzy + recency + git context)
+- [x] Interactive TUI with Ink (`flux u`)
+- [x] Lazygit-style Rezi TUI (`flux u --rezi`)
+- [x] Custom tag support (`--tag`)
+- [x] Parent directory `.flux` discovery
+
+### Coming next
+- [ ] Convenience commands (`flux recent`, `flux here`, `flux notes`)
+- [ ] Tag match scoring in SearchV2
+- [ ] AI export format (`flux ai`)
+- [ ] Todo scanning from codebase (`flux t --scan`)
+
 
 ### Phase 3 (Future)
 - [ ] Advanced git context switching
@@ -445,5 +466,3 @@ The system will now only auto-detect major bumps with very explicit indicators l
 MIT
 
 ---
-
-Built for developers who think fast, context-switch often, and never want to lose a good idea.
