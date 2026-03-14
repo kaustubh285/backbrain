@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 0.10.0
+
+### Minor Changes
+
+- 5227af8: Add Rezi-based TUI and optional search filters
+
 ## 0.9.1
 
 ### Patch Changes
