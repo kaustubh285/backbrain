@@ -13,7 +13,7 @@ import {
 import { createFuseInstance } from "../utils/fuse.instance";
 import { searchV2Helper } from "@/utils/search/helper";
 
-export async function searchBrainDumpCommand(query: string[], returnResults: boolean = false) {
+export async function searchBrainDumpCommand(query: string[], returnResults: boolean = false, searchResultLimit?: number, specificListOfFiles: string[] | null = null) {
 	if (!returnResults) console.log("Searching all brain dumps...");
 	const fluxPath = await getFluxPath();
 	const config = await getConfigFile(fluxPath);
@@ -28,7 +28,7 @@ export async function searchBrainDumpCommand(query: string[], returnResults: boo
 			final: Number;
 		}
 	}> = [];
-	const allFilePaths = await getAllBrainDumpFilePaths(fluxPath);
+	const allFilePaths = specificListOfFiles ? specificListOfFiles : await getAllBrainDumpFilePaths(fluxPath);
 
 	if (combinedQuery) {
 		for (const searchQuery of query) {
@@ -73,7 +73,7 @@ export async function searchBrainDumpCommand(query: string[], returnResults: boo
 		});
 	}
 
-	const resultLimit = config?.search?.resultLimit || (combinedQuery ? 10 : 5);
+	const resultLimit = searchResultLimit ? searchResultLimit : config?.search?.resultLimit || (combinedQuery ? 10 : 5);
 	const limitedResults = searchResults.slice(0, resultLimit);
 
 	if (returnResults) {

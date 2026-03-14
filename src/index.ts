@@ -8,7 +8,7 @@ import { initFluxCommand, resetFluxCommand } from "./commands/init.command";
 import { searchBrainDumpCommand } from "./commands/search.command";
 import { getFluxPath } from "./utils";
 import { searchV2Command } from "./commands/search.v2.command";
-import { tuiCommand } from "./commands/ui.command";
+import { tuiCommandInk, tuiCommandRezi } from "./commands/ui.command";
 const program = new Command();
 
 program
@@ -69,7 +69,12 @@ program
 program
 	.command("u")
 	.alias("ui")
-	.description("Open interactive search TUI")
-	.action(tuiCommand);
+	.description("Open interactive search TUI built using rezi")
+	.action(tuiCommandRezi);
+
+program
+	.command("ui-ink")
+	.description("Open interactive search TUI built using ink")
+	.action(tuiCommandInk);
 
 program.parse(process.argv);

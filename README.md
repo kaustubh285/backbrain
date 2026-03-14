@@ -356,7 +356,7 @@ Want to contribute or run locally?
 
 ```bash
 # Clone and setup
-git clone https://github.com/yourusername/flux-cap
+git clone https://github.com/kaustubh285/flux-cap
 cd flux-cap
 bun install
 
