@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 1.1.0
+
+### Minor Changes
+
+- flux-cap now has MCP support for AI integration to act as a shared brain dump tool by humans and AI
+
 ## 1.0.0
 
 ### Patch Changes
