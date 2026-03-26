@@ -1,10 +1,11 @@
 {
 	"name": "@dev_desh/flux-cap",
 	"type": "module",
-	"version": "0.10.1",
+	"version": "1.0.0",
 	"description": "Git-aware CLI context manager for ADHD developers",
 	"bin": {
-		"flux": "./dist/index.js"
+		"flux": "./dist/index.js",
+		"flux-mcp": "./dist/mcp-server.ts"
 	},
 	"files": [
 		"dist/**/*",
@@ -12,7 +13,7 @@
 		"LICENSE"
 	],
 	"scripts": {
-		"build": "bun build src/index.ts --outdir dist --target node --format esm --external @rezi-ui/core --external @rezi-ui/node --external @rezi-ui/jsx --external @rezi-ui/native",
+		"build": "bun build src/index.ts --outdir dist --target node --format esm --external @rezi-ui/core --external @rezi-ui/node --external @rezi-ui/jsx --external @rezi-ui/native && bun build src/mcp-server.ts --outdir dist --target node --format esm",
 		"dev": "bun run src/index.ts",
 		"prepublishOnly": "bun run build",
 		"publish": "npm publish --access=public",
@@ -39,6 +40,7 @@
 		"developer-tools"
 	],
 	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.28.0",
 		"@rezi-ui/core": "^0.1.0-alpha.59",
 		"@rezi-ui/jsx": "^0.1.0-alpha.59",
 		"@rezi-ui/node": "^0.1.0-alpha.59",
@@ -51,7 +53,8 @@
 		"inquirer": "^13.2.5",
 		"react": "^19.2.4",
 		"react-devtools-core": "^7.0.1",
-		"react-dom": "^19.2.4"
+		"react-dom": "^19.2.4",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4",

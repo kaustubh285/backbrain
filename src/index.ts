@@ -9,6 +9,7 @@ import { searchBrainDumpCommand } from "./commands/search.command";
 import { getFluxPath } from "./utils";
 import { searchV2Command } from "./commands/search.v2.command";
 import { tuiCommandInk, tuiCommandRezi } from "./commands/ui.command";
+import { mcpServerCommand, mcpSetupCommand } from "./mcp-config";
 const program = new Command();
 
 program
@@ -39,6 +40,7 @@ program
 	.option("-t, --tasks", "Jot down a task")
 	.option("-b, --bugs", "Jot down a bug")
 	.option("-l, --links", "Jot down a link")
+	.option("-a, --ai", "AI jotted down something for you")
 	.option("--tag [custom]", "Jot down a custom tagged")
 	.description(
 		"Add a brain dump with a message. Use --multiline for multi-line input.",
@@ -51,7 +53,8 @@ program
 	.command("s [query...]")
 	.alias("search")
 	.description(
-		"Search brain dumps with a query. If no query is provided, lists all brain dumps for the current month.",
+		"Search brain dumps with smart ranking. Examples:\n" +
+		"  flux s auth        # Find auth-related dumps"
 	)
 	.action((query?: string[]) => {
 		searchBrainDumpCommand(query ? query : [""]);
@@ -65,6 +68,20 @@ program
 	)
 	.action(configCommand);
 
+
+program
+	.command("mcp-config")
+	.description("Help configure MCP server for Flux-cap")
+	.action(async () => {
+		await mcpSetupCommand();
+	});
+
+program
+	.command("mcp-server")
+	.description("Start MCP server (used internally by IDEs)")
+	.action(async () => {
+		mcpServerCommand();
+	});
 
 program
 	.command("u")

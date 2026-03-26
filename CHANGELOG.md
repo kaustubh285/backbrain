@@ -1,6 +1,6 @@
 # @dev_desh/flux-cap
 
-## 0.10.1
+## 1.0.0
 
 ### Patch Changes
 
