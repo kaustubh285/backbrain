@@ -60,14 +60,14 @@ server.registerTool(
 					type: "text",
 					text: fluxDir
 						? `Found flux directory: ${fluxDir}`
-						: "❌ No .flux directory found. User needs to run 'flux init' in their project."
+						: " No .flux directory found. User needs to run 'flux init' in their project."
 				}]
 			};
 		} catch (error) {
 			return {
 				content: [{
 					type: "text",
-					text: `❌ Error finding flux directory: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: ` Error finding flux directory: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}
@@ -102,7 +102,7 @@ server.registerTool(
 		const fluxDir = findFluxDirectory();
 		if (!fluxDir) {
 			return {
-				content: [{ type: "text", text: "❌ Flux-cap not initialized. No .flux directory found." }]
+				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found." }]
 			};
 		}
 
@@ -119,7 +119,174 @@ server.registerTool(
 			return {
 				content: [{
 					type: "text",
-					text: `❌ Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: ` Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+				}]
+			};
+		}
+	}
+);
+
+
+server.registerTool(
+	"add_dump",
+	{
+		title: "Capture Brain Dump with Smart Tagging",
+		description: `Capture a brain dump with appropriate tags based on content type.
+
+		AVAILABLE TAGS & WHEN TO USE:
+		• -i (ideas): Creative thoughts, feature suggestions, "what if we...", brainstorming
+		• -n (notes): Meeting notes, reminders, general information, documentation
+		• -t (tasks): TODOs, action items, "need to do", work assignments
+		• -b (bugs): Issues, errors, problems, "this is broken", debugging notes
+		• -l (links): URLs, references, resources, documentation links
+		• -d (ideas alt): Alternative ideas tag (same as -i)
+		• -a (AI made notes): All AI-generated entries need this for easy filtering
+		• --tag <custom>: Use custom tags like "meeting", "review", "research"
+
+		SMART TAGGING EXAMPLES:
+		• "I need to refactor the auth module" → -t (task)
+		• "Found a bug in payment processing" → -b (bug)
+		• "Idea: add dark mode toggle" → -i (idea)
+		• "Meeting notes from standup" → -n (note)
+		• "Check this documentation: https://..." → -l (link)`,
+
+		inputSchema: z.object({
+			message: z.string().describe("The brain dump content to capture"),
+			tag: z.enum(["i", "n", "t", "b", "l", "d", "a"]).optional().describe("Predefined tag: i=ideas, n=notes, t=tasks, b=bugs, l=links, d=ideas(alt), a=AI-notes"),
+			customTag: z.string().optional().describe("Custom tag name (use instead of predefined tags for specific contexts)"),
+			multiline: z.boolean().optional().describe("Enable multiline mode for longer content")
+		})
+	},
+	async ({ message, tag, customTag, multiline }) => {
+		const fluxDir = findFluxDirectory();
+		if (!fluxDir) {
+			return {
+				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found. User needs to run 'flux init' first." }]
+			};
+		}
+
+		let cmd = "flux d";
+
+		if (tag) {
+			cmd += ` -${tag}`;
+		} else if (customTag) {
+			cmd += ` --tag ${customTag}`;
+		}
+
+		if (multiline) {
+			cmd += " -m";
+		}
+
+		const escapedMessage = message.replace(/"/g, '\\"');
+		cmd += ` "${escapedMessage}"`;
+
+		try {
+			const output = safeExec(cmd, fluxDir);
+			const tagLabel = tag ? `[${tag}]` : customTag ? `[${customTag}]` : '';
+			return {
+				content: [{
+					type: "text",
+					text: ` Brain dump captured ${tagLabel}\n${output || `"${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}`
+				}]
+			};
+		} catch (error) {
+			return {
+				content: [{
+					type: "text",
+					text: ` Failed to capture dump: ${error instanceof Error ? error.message : 'Unknown error'}`
+				}]
+			};
+		}
+	}
+);
+
+server.registerTool(
+	"list_recent",
+	{
+		title: "List Recent Brain Dumps",
+		description: "Get the most recent brain dumps. Perfect for 'what was I doing' questions or getting recent context.",
+		inputSchema: z.object({
+			limit: z.number().optional().describe("Number of recent dumps to show (default: according to config)")
+		})
+	},
+	async ({ limit }) => {
+		const fluxDir = findFluxDirectory();
+		if (!fluxDir) {
+			return {
+				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found." }]
+			};
+		}
+
+		try {
+			const output = safeExec("flux s", fluxDir);
+
+			if (limit && output) {
+				const lines = output.split('\n');
+				const resultStartIndex = lines.findIndex(line => line.includes('#') && line.includes('ID'));
+				if (resultStartIndex >= 0) {
+					const headers = lines.slice(0, resultStartIndex + 2);
+					const results = lines.slice(resultStartIndex + 2, resultStartIndex + 2 + limit);
+					const limitedOutput = [...headers, ...results].join('\n');
+					return { content: [{ type: "text", text: limitedOutput }] };
+				}
+			}
+
+			return {
+				content: [{ type: "text", text: output || "No recent brain dumps found." }]
+			};
+		} catch (error) {
+			return {
+				content: [{
+					type: "text",
+					text: ` Failed to list recent dumps: ${error instanceof Error ? error.message : 'Unknown error'}`
+				}]
+			};
+		}
+	}
+);
+
+server.registerTool(
+	"get_status",
+	{
+		title: "Get Flux-Cap Status",
+		description: "Check flux-cap status, current git context, and project information.",
+		inputSchema: z.object({})
+	},
+	async () => {
+		const fluxDir = findFluxDirectory();
+		if (!fluxDir) {
+			return {
+				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found." }]
+			};
+		}
+
+		try {
+			let status = "Flux-cap Status\n\n";
+			status += ` Project Directory: ${fluxDir}\n`;
+
+			try {
+				const branch = safeExec("git branch --show-current", fluxDir, { suppressErrors: true });
+				status += `Git Branch: ${branch || "Not in git repo"}\n`;
+			} catch {
+				status += "Git Branch: Not in git repo\n";
+			}
+
+			try {
+				const config = safeExec("flux config", fluxDir, { suppressErrors: true });
+				const configLines = config.split('\n').slice(0, 3);
+				status += `\nConfiguration:\n${configLines.join('\n')}\n`;
+			} catch {
+				status += "\nConfiguration: Unable to load\n";
+			}
+
+			return {
+				content: [{ type: "text", text: status }]
+			};
+		} catch (error) {
+			return {
+				content: [{
+					type: "text",
+					text: ` Failed to get status: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}

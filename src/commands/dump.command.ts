@@ -103,5 +103,5 @@ export async function brainDumpAddCommand(
 		? `${message.split("\n")[0]}... (multiline)`
 		: displayMessage;
 
-	console.log(`✅ Brain dump saved: "${preview}"`);
+	console.log(` Brain dump saved: "${preview}"`);
 }

@@ -20,6 +20,7 @@ The commit history tells the story better than this paragraph.
 **Now at v1.0.0** — with Search 2.0 multi-signal ranking, Ink-powered interactive TUI, and a Rezi-based lazygit-style interface.
 
 ### What's new:
+- **v1.1.0:** Flux-cap MCP support!!
 - **v1.0.0:** First stable release
 - **v0.10.0:** Rezi-based lazygit-style TUI (`flux u`)
 - **v0.9.0:** Ink-powered interactive search TUI (`flux ui-ink`)
@@ -98,6 +99,38 @@ flux-cap now features **Search 2.0** - intelligent, context-aware search that pr
 - **Interactive TUI**: Real-time search with professional interface
 - **Smart Scoring**: See relevance scores and context indicators
 
+### 4. **AI Agent Integration** (NEW in v1.1!)
+
+flux-cap now integrates with AI assistants via MCP (Model Context Protocol):
+
+![MCP Integration](https://github.com/kaustubh285/flux-cap/blob/main/images/mcp-integration.png)
+
+#### **What This Gives You:**
+- **Shared Memory**: AI agents can access your brain dumps as context
+- **Smart Captures**: AI suggests capturing important conversation insights
+- **Context Awareness**: AI knows your past work when helping with current tasks
+- **Seamless Workflow**: No context switching between CLI and AI chat
+
+#### **Setup :**
+Flux-Cap MCP Integration Setup!!
+```json
+ {
+  "mcpServers": {
+    "flux-cap": {
+      "command": "flux",
+      "args": [
+        "mcp-server"
+      ],
+      "env": {}
+    }
+  }
+}
+```
+
+Add it to:
+- Cursor: ~/.cursor/mcp.json
+- Zed: ~/.config/zed/settings.json (add to 'language_models' section)
+- Claude Desktop: ~/Library/Application Support/Claude/claude_desktop_config.json (or equivalent on your OS)
 
 ## 📸 Screenshots
 

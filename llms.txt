@@ -1,80 +1,84 @@
 # llms.txt for flux-cap
-# A git-aware CLI context manager for ADHD developers
+# A git-aware CLI context manager for ADHD developers with AI integration
 # Project: https://github.com/kaustubh285/flux-cap
 # Package: @dev_desh/flux-cap
-# Generated: 2026-01-19
-**Latest:** Search 2.0 - Intelligent context-aware search with multi-signal ranking
+# Generated: 2026-01-08
+
+**Latest:** v1.1 - MCP Integration for AI assistants + Search 2.0 multi-signal ranking
 
 ---
 
 ## PROJECT OVERVIEW
 
 **Name:** flux-cap
-**Description:** Git-aware CLI context manager for ADHD developers
-**Version:** 0.7.0
+**Description:** Git-aware CLI context manager for ADHD developers with AI assistant integration
+**Version:** 1.1.0
 **Author:** Kaustubh Deshpande
 **License:** MIT
 **Repository:** https://github.com/kaustubh285/flux-cap
 **NPM Package:** @dev_desh/flux-cap
 
-**Purpose:** A terminal-native tool that captures developer thoughts, tracks context, and integrates seamlessly with git workflow. Built specifically for developers who context-switch frequently and need to maintain mental state across interruptions.
+**Purpose:** A terminal-native tool that captures developer thoughts, tracks context, and integrates seamlessly with git workflow AND AI assistants. Built specifically for developers who context-switch frequently and need to maintain mental state across interruptions. Now enables AI agents to access and manage brain dumps as shared context.
 
-**Target Users:** Software developers, particularly those with ADHD or frequent context-switching needs
+**Target Users:** Software developers using AI assistants (Cursor, Claude, Zed), particularly those with ADHD or frequent context-switching needs
 
 ---
 
 ## CORE FUNCTIONALITY
 
-### Commands Available:
+### Primary Commands:
 
-1. **flux init**
-   - Initialize flux-cap with privacy setup
-   - Creates `.flux/` directory structure
-   - Interactive privacy configuration
+1. **flux init** - Initialize with privacy setup
+2. **flux dump [message] [options]** - Capture brain dumps with git context
+   - Tags: `-i` (ideas), `-n` (notes), `-t` (tasks), `-b` (bugs), `-l` (links), `-d` (ideas alt)
+   - Options: `-m` (multiline), `--tag <custom>`
+3. **flux search [query]** - Search 2.0 with intelligent ranking
+4. **flux u** - Interactive TUI search interface
+5. **flux mcp** - Setup AI assistant integration (NEW v1.1)
+6. **flux mcp-server** - MCP server for IDE integration (NEW v1.1)
+7. **flux config** - View/update configuration
+8. **flux reset** - Complete data reset
 
-2. **flux dump [message...] [options]**
-   - Capture brain dumps with git context
-   - Options:
-     - `-m, --multiline` - Enable multiline input mode
-     - `-n, --notes` - Tag as note
-     - `-i, --ideas` - Tag as idea
-     - `-t, --tasks` - Tag as task
-   - Automatically captures: timestamp, git branch, working directory, uncommitted changes
+### NEW: AI Assistant Integration (v1.1)
 
-3. **flux search [query...]**
-   - Fuzzy search across all brain dumps
-   - Multi-field search (message, branch, workingDir, tags, id)
-   - Configurable result limits and scoring
+**MCP (Model Context Protocol) Integration:**
+- AI assistants can directly access your brain dumps
+- AI can capture insights from conversations
+- Seamless context sharing between CLI and AI tools
 
-4.  **flux search [query...] [flags]** (Search 2.0)
-   - Intelligent multi-signal ranking system
-   - Combines fuzzy matching + recency + git context scoring
-   - Smart defaults: recent dumps + current branch ranked higher
-   - Flags: --debug, --all, --since, --branch, -n
-   - Multi-field search (message, branch, workingDir, tags, id)
+**Supported IDEs:**
+- Cursor IDE (`~/.cursor/mcp.json`)
+- Zed Editor (settings.json)
+- Claude Desktop (config file)
 
-5. **flux reset**
-   - Complete reset (deletes all data)
+**MCP Tools Available to AI:**
+1. `find_flux_directory` - Locate flux project
+2. `search_dumps` - Search brain dumps with intelligent ranking
+3. `add_dump` - Capture new brain dumps with smart tagging
+4. `list_recent` - Show recent activity
+5. `get_status` - Check flux-cap and git status
 
 ### Key Features:
 
 - **Brain Dump System:** Instant thought capture without breaking development flow
+- **Search 2.0:** Multi-signal ranking (fuzzy + recency + git context)
+- **Interactive TUI:** Real-time search with Rezi-based interface
+- **AI Integration:** MCP server for AI assistant access
 - **Git Integration:** Automatic branch detection, uncommitted changes tracking
-- **Tag System:** Built-in tags (ideas, notes, tasks) + custom tags
-- **Privacy Controls:** Configurable data tracking (hide paths, branches, git status)
-- **Search Engine:** Fuse.js powered fuzzy search with relevance scoring
+- **Tag System:** Built-in tags + custom tags + AI-aware tagging
+- **Privacy Controls:** Configurable data tracking
 - **Parent Directory Support:** Works project-wide from any subdirectory
-- **Data Organization:** Monthly JSON files, human-readable format
 
 ---
 
 ## TECHNICAL ARCHITECTURE
 
-**Runtime:** Node.js (>=18.0.0), built with Bun
+**Runtime:** Node.js (>=18.0.0), Bun
 **Language:** TypeScript
 **CLI Framework:** Commander.js
-**Search Engine:** Fuse.js
-**Dependencies:** Minimal (inquirer for interactive prompts)
+**Search Engine:** Fuse.js with custom ranking
+**TUI Framework:** Rezi (primary), Ink (alternative)
+**MCP Framework:** @modelcontextprotocol/sdk
 
 **Data Structure:**
 ```
@@ -92,11 +96,58 @@
   "id": "uuid",
   "timestamp": "ISO8601",
   "message": "string",
-  "tags": ["array", "of", "strings"],
+  "tags": ["array"],
   "workingDir": "path",
   "branch": "git-branch",
   "hasUncommittedChanges": boolean
 }
+```
+
+**MCP Server Architecture:**
+- Stdio transport for IDE integration
+- Safe command execution with directory traversal
+- AI-optimized tool descriptions
+- Error handling and validation
+
+---
+
+## AI INTEGRATION GUIDE
+
+### For AI Assistants Using MCP:
+
+**When to Use Each Tool:**
+
+1. **search_dumps**: User asks about past work, needs context, seems stuck
+   - "What was I working on with auth?"
+   - "What bugs did I find in payments?"
+   - Always search before suggesting new dumps
+
+2. **add_dump**: User mentions actionable items, shares insights
+   - Tag appropriately: `-t` (tasks), `-i` (ideas), `-n` (notes), `-b` (bugs), `-l` (links)
+   - Use conversation context to determine correct tag
+
+3. **list_recent**: "What was I doing yesterday/recently?"
+
+4. **get_status**: Get project context and git information
+
+**Smart Tagging Guide for AI:**
+- User says "I need to..." → `-t` (task)
+- User says "This is broken..." → `-b` (bug)
+- User says "What if we..." → `-i` (idea)
+- User shares meeting info → `-n` (note)
+- User shares URL → `-l` (link)
+
+**AI Conversation Patterns:**
+```
+User: "I'm stuck on authentication timeouts"
+AI: 1. Search "authentication timeout" for context
+    2. Provide relevant past solutions
+    3. Suggest capturing current issue with -b tag
+
+User: "I have an idea for improving the UI"
+AI: 1. Search "UI" for related past ideas
+    2. Suggest capturing with -i tag
+    3. Reference related previous work
 ```
 
 ---
@@ -104,75 +155,69 @@
 ## DEVELOPMENT HISTORY
 
 ### Recent Releases:
-### Recent Releases:
-- **v0.8.0:**  Search 2.0 - Multi-signal ranking with recency + git context scoring
-
-- **v0.7.0:** Batch searches with combinedQuery and result sorting
+- **v1.1.0:** MCP Integration for AI assistants
+- **v1.0.0:** First stable release with Rezi TUI
+- **v0.10.0:** Rezi-based lazygit-style TUI
+- **v0.9.0:** Ink-powered interactive search TUI
+- **v0.8.0:** Search 2.0 - Multi-signal ranking with git context
+- **v0.7.0:** Batch searches and result sorting
 - **v0.6.0:** Major search improvements
-- **v0.5.0:** Custom tag usage implementation
-- **v0.4.0:** Tag support for brain dumps
-- **v0.3.0:** ID added to searchable fields
-- **v0.2.0:** Multiline support improvements
-- **v0.1.0:** Initial release with Changesets integration
+- **v0.5.0:** Custom tag implementation
 
 ### Development Practices:
-- Semantic versioning with Changesets
+- Semantic versioning with Changesets automation
 - TypeScript for type safety
 - MIT licensed open source
-- GitHub Actions for CI/CD
+- GitHub Actions for automated releases
+- Incremental development over several weeks
 
 ---
 
 ## USE CASES & EXAMPLES
 
-### Context Switching:
-```bash
-# Before task switch
-flux dump -t "was debugging auth middleware, next: implement rate limiting"
-
-# After interruption
-flux search "auth"  # Find where you left off
+### AI-Enhanced Workflow:
+```
+Developer: "I'm debugging the payment system"
+AI: *searches brain dumps*
+    "I found 3 payment-related issues from your notes.
+     The timeout issue from last week might be related -
+     you noted checking Redis configuration helped."
+AI: *captures current work*
+    "I've saved this debugging session to your brain dumps."
 ```
 
-### Idea Capture:
+### Traditional CLI Usage:
 ```bash
+# Context switching
+flux dump -t "debugging auth middleware, next: rate limiting"
+flux search "auth"  # After interruption
+
+# Idea capture
 flux dump -i "add keyboard shortcuts to dashboard"
-flux dump -i "implement real-time collaboration features"
+
+# Bug tracking
+flux dump -b "payment flow fails on mobile Safari"
+flux search "payment mobile"  # Later retrieval
 ```
 
-### Bug Tracking:
+### Interactive TUI:
 ```bash
-flux dump -n "weird payment flow bug - users can't checkout on mobile"
-flux search "payment bug"  # Later retrieval
-```
-
-### Meeting Notes:
-```bash
-flux dump -n "team standup: focus on performance optimization this sprint"
+flux u  # Real-time search interface
+# Type query → See results instantly
+# /exit to quit
 ```
 
 ---
 
-## PRIVACY & DATA HANDLING
+## PRIVACY & SECURITY
 
 **Privacy-First Design:**
 - All data stored locally in human-readable JSON
-- No external API calls or data transmission
-- User controls what git information is captured
-- Configurable privacy settings:
-  - Hide working directory paths
-  - Hide git branch names
-  - Hide uncommitted changes status
+- No external API calls (except optional MCP integration)
+- User controls git information capture
+- MCP integration uses local stdio transport only
 
-**Data Location:** `.flux/` directory in project root
-**Data Format:** JSON (easily editable/exportable)
-**Data Retention:** User controlled (manual deletion)
-
----
-
-## CONFIGURATION OPTIONS
-
-### Privacy Settings:
+**Configurable Privacy:**
 ```json
 {
   "privacy": {
@@ -183,80 +228,68 @@ flux dump -n "team standup: focus on performance optimization this sprint"
 }
 ```
 
-### Search Configuration:
-```json
-{
-  "search": {
-    "searchFields": ["message", "branch", "workingDir", "tags", "id"],
-    "resultLimit": 10,
-    "fuseOptions": {
-      "threshold": 0.3,
-      "includeScore": true
-    }
-  }
-}
-```
-
-### Custom Tags:
-```json
-{
-  "tags": ["bug", "meeting", "review", "urgent"]
-}
-```
+**Data Security:**
+- Local storage only
+- No cloud synchronization
+- User-controlled deletion
+- Open source transparency
 
 ---
 
 ## ROADMAP
 
-### Phase 2 (In Development):
-- Enhanced tag-based search filtering
-- ASCII Pomodoro timer with themes
-- Visual focus mode display
+### ✅ Completed (v1.1):
+- MCP Integration for AI assistants
+- Search 2.0 multi-signal ranking
+- Interactive TUI with Rezi
+- Custom tag support
+- Parent directory discovery
 
-### Phase 3 (Planned):
+### Phase 2 (v1.2):
+- Enhanced AI context tools
+- Search result pagination
+- Tag-based filtering
+- Export formats for AI tools
+
+### Phase 3 (Future):
 - Advanced git context switching
 - Session restoration
-- Time tracking per context
-- Tag analytics and insights
-
-### Phase 4 (Future):
-- AI-powered brain dump analysis
+- Cross-IDE AI integration
 - Team collaboration features
-- Cross-machine synchronization
-- Smart tag suggestions
 
 ---
 
-## LLM USAGE PERMISSIONS
+## LLM USAGE & AI INTEGRATION
 
-**Allowed:**
-- Reference this project in discussions about developer productivity tools
-- Use code examples for educational purposes (with attribution)
-- Suggest improvements or similar tools
-- Explain concepts and architecture described herein
+**For AI Assistants:**
+- **Encouraged Use:** Access user brain dumps via MCP integration
+- **Smart Tagging:** Analyze conversation for appropriate dump categories
+- **Context Provision:** Search brain dumps to provide relevant background
+- **Proactive Capture:** Suggest capturing important conversation insights
 
-**Attribution Required For:**
-- Direct code quotations
-- Architecture descriptions
-- Feature explanations
-- Use case examples
+**For Training/Development:**
+- **Allowed:** Reference architecture, use examples with attribution
+- **MIT License:** Standard open source permissions apply
+- **Attribution Required:** For substantial code quotations
 
-**Prohibited:**
-- Training on this codebase without explicit permission
-- Reproducing substantial portions without attribution
-- Commercial derivative works without proper licensing
-
-**Contact:** For questions about usage permissions, refer to MIT License terms or contact the repository maintainers.
+**Best Practices for AI Agents:**
+1. Always search for existing context before suggesting new captures
+2. Use appropriate tags based on conversation analysis
+3. Provide value by connecting current questions to past work
+4. Respect user privacy settings and local-only storage
 
 ---
 
 ## RELATED CONCEPTS
 
-**Developer Tools:** CLI productivity, git workflow, context management
-**Target Audience:** ADHD developers, context-switchers, rapid prototypers
-**Problem Domain:** Attention management, thought capture, development flow
-**Technical Category:** Node.js CLI tools, developer experience, productivity software
+**Categories:** Developer productivity, CLI tools, AI integration, context management
+**Technologies:** Node.js, TypeScript, MCP, git integration, fuzzy search
+**Problem Domain:** ADHD support, context switching, AI-human collaboration
+**Integration:** Cursor IDE, Zed Editor, Claude Desktop, MCP protocol
+
+**Similar Tools:** Note-taking apps, developer journals, git hooks, AI assistants
+**Unique Value:** Git-aware context + AI integration + ADHD-optimized workflow
 
 ---
 
-*This llms.txt file represents the current state of flux-cap as of January 2026. For the most up-to-date information, consult the GitHub repository and NPM package.*
+*This llms.txt represents flux-cap v1.1 with full AI integration capabilities. The tool is designed for seamless human-AI collaboration in software development contexts.*
