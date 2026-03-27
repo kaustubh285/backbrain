@@ -2,7 +2,7 @@
 import { createNodeApp } from "@rezi-ui/node";
 import { Column, Row, Text, Input, Button, Box, Divider, Table, Page } from "@rezi-ui/jsx";
 import { searchBrainDumpCommand } from "@/commands/search.command";
-import { getAllBrainDumpFilePaths, getFluxPath, getTimeAgo } from "@/utils";
+import { getAllBrainDumpFilePaths, getBBPath, getTimeAgo } from "@/utils";
 import type { SearchResult } from "@/types";
 import { darkTheme, draculaTheme, nordTheme, rgb } from "@rezi-ui/core";
 
@@ -16,9 +16,9 @@ type AppState = {
 	selectedFile: string | null;
 };
 
-export const FluxTui = async () => {
-	const fluxPath = await getFluxPath();
-	const allFiles = await getAllBrainDumpFilePaths(fluxPath);
+export const BBTui = async () => {
+	const bbPath = await getBBPath();
+	const allFiles = await getAllBrainDumpFilePaths(bbPath);
 	const fileNames = allFiles
 		.map(p => p.match(/(\d{4}-\d{2})\.json$/)?.[1] ?? null)
 		.filter((f): f is string => f !== null)
@@ -76,7 +76,7 @@ export const FluxTui = async () => {
 			<Page
 				header={
 					<Row gap={2} p={1}>
-						<Text variant="label" style={{ bold: true }}>flux</Text>
+						<Text variant="label" style={{ bold: true }}>BackBrain</Text>
 						<Text variant="caption" style={{ dim: true }}>·</Text>
 						<Row gap={0}>
 							<Text variant="label">Search {state.query && `[searching for:`}</Text> <Text style={{

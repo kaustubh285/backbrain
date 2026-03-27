@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
-// ASSISTED BY AI: This file sets up an MCP server that integrates with the flux-cap CLI tool. It provides two main functionalities:
-// 1. Finding the nearest .flux directory to ensure that flux-cap is initialized and available.
-// 2. Searching brain dumps using the flux search command, with intelligent ranking based on relevance, recency, and git context.
+// ASSISTED BY AI: This file sets up an MCP server that integrates with the Backbrain CLI tool. It provides two main functionalities:
+// 1. Finding the nearest .bb directory to ensure that Backbrain is initialized and available.
+// 2. Searching notes using the bb search command, with intelligent ranking based on relevance, recency, and git context.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { execSync } from "child_process";
@@ -28,7 +28,7 @@ const safeExec = (command: string, workingDir?: string, options: { suppressError
 	}
 };
 
-const findFluxDirectory = () => {
+const findBBDirectory = () => {
 	const fs = require("fs");
 	const path = require("path");
 
@@ -36,8 +36,8 @@ const findFluxDirectory = () => {
 	const root = path.parse(currentDir).root;
 
 	while (currentDir !== root) {
-		const fluxDir = path.join(currentDir, '.flux');
-		if (fs.existsSync(fluxDir)) {
+		const bbDir = path.join(currentDir, '.bb');
+		if (fs.existsSync(bbDir)) {
 			return currentDir;
 		}
 		currentDir = path.dirname(currentDir);
@@ -46,28 +46,28 @@ const findFluxDirectory = () => {
 };
 
 server.registerTool(
-	"find_flux_directory",
+	"find_bb_directory",
 	{
-		title: "Find Flux Directory",
-		description: "Locate the nearest .flux directory by traversing up the directory tree. Use this first to ensure flux-cap is available.",
+		title: "Find BackBrain Directory",
+		description: "Locate the nearest .bb directory by traversing up the directory tree. Use this first to ensure Backbrain is available.",
 		inputSchema: z.object({})
 	},
 	async () => {
 		try {
-			const fluxDir = findFluxDirectory();
+			const bbDir = findBBDirectory();
 			return {
 				content: [{
 					type: "text",
-					text: fluxDir
-						? `Found flux directory: ${fluxDir}`
-						: " No .flux directory found. User needs to run 'flux init' in their project."
+					text: bbDir
+						? `Found bb directory: ${bbDir}`
+						: " No .bb directory found. User needs to run 'bb init' in their project."
 				}]
 			};
 		} catch (error) {
 			return {
 				content: [{
 					type: "text",
-					text: ` Error finding flux directory: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: ` Error finding bb directory: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}
@@ -76,21 +76,21 @@ server.registerTool(
 
 
 server.registerTool(
-	"search_dumps",
+	"search_notes",
 	{
-		title: "Search Brain Dumps with Intelligent Ranking",
-		description: `Search user's brain dumps with AI-powered ranking (relevance + recency + git context).
+		title: "Search Notes with Intelligent Ranking",
+		description: `Search user's notes with AI-powered ranking (relevance + recency + git context).
 
 			WHEN TO USE:
 			• User asks about past work: "What was I working on with auth?"
 			• User needs context: "What bugs did I find in the payment system?"
 			• User seems stuck: "I'm having trouble with React hooks" → search "react hooks"
-			• Before suggesting new dumps: Always search first to provide context
+			• Before suggesting new notes: Always search first to provide context
 
 			SEARCH STRATEGY:
 			• Use specific keywords from user's conversation
 			• Try broader terms if specific search returns nothing
-			• Empty query returns recent dumps (good for "what was I doing lately")
+			• Empty query returns recent notes (good for "what was I doing lately")
 
 			OUTPUT: Returns ranked results with git context, timestamps, and relevance scores.`,
 
@@ -99,20 +99,20 @@ server.registerTool(
 		})
 	},
 	async ({ query = "" }) => {
-		const fluxDir = findFluxDirectory();
-		if (!fluxDir) {
+		const bbDir = findBBDirectory();
+		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found." }]
+				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found." }]
 			};
 		}
 
 		try {
-			const cmd = query ? `flux s "${query.replace(/"/g, '\\"')}"` : "flux s";
-			const output = safeExec(cmd, fluxDir);
+			const cmd = query ? `bb s "${query.replace(/"/g, '\\"')}"` : "bb s";
+			const output = safeExec(cmd, bbDir);
 			return {
 				content: [{
 					type: "text",
-					text: output || "No brain dumps found matching your criteria."
+					text: output || "No notes found matching your criteria."
 				}]
 			};
 		} catch (error) {
@@ -128,10 +128,10 @@ server.registerTool(
 
 
 server.registerTool(
-	"add_dump",
+	"add_note",
 	{
-		title: "Capture Brain Dump with Smart Tagging",
-		description: `Capture a brain dump with appropriate tags based on content type.
+		title: "Capture Note with Smart Tagging",
+		description: `Capture a note with appropriate tags based on content type.
 
 		AVAILABLE TAGS & WHEN TO USE:
 		• -i (ideas): Creative thoughts, feature suggestions, "what if we...", brainstorming
@@ -151,21 +151,21 @@ server.registerTool(
 		• "Check this documentation: https://..." → -l (link)`,
 
 		inputSchema: z.object({
-			message: z.string().describe("The brain dump content to capture"),
+			message: z.string().describe("The note content to capture"),
 			tag: z.enum(["i", "n", "t", "b", "l", "d", "a"]).optional().describe("Predefined tag: i=ideas, n=notes, t=tasks, b=bugs, l=links, d=ideas(alt), a=AI-notes"),
 			customTag: z.string().optional().describe("Custom tag name (use instead of predefined tags for specific contexts)"),
 			multiline: z.boolean().optional().describe("Enable multiline mode for longer content")
 		})
 	},
 	async ({ message, tag, customTag, multiline }) => {
-		const fluxDir = findFluxDirectory();
-		if (!fluxDir) {
+		const bbDir = findBBDirectory();
+		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found. User needs to run 'flux init' first." }]
+				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found. User needs to run 'bb init' first." }]
 			};
 		}
 
-		let cmd = "flux d";
+		let cmd = "bb d";
 
 		if (tag) {
 			cmd += ` -${tag}`;
@@ -181,19 +181,19 @@ server.registerTool(
 		cmd += ` "${escapedMessage}"`;
 
 		try {
-			const output = safeExec(cmd, fluxDir);
+			const output = safeExec(cmd, bbDir);
 			const tagLabel = tag ? `[${tag}]` : customTag ? `[${customTag}]` : '';
 			return {
 				content: [{
 					type: "text",
-					text: ` Brain dump captured ${tagLabel}\n${output || `"${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}`
+					text: ` Note captured ${tagLabel}\n${output || `"${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}`
 				}]
 			};
 		} catch (error) {
 			return {
 				content: [{
 					type: "text",
-					text: ` Failed to capture dump: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: ` Failed to capture note: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}
@@ -203,22 +203,22 @@ server.registerTool(
 server.registerTool(
 	"list_recent",
 	{
-		title: "List Recent Brain Dumps",
-		description: "Get the most recent brain dumps. Perfect for 'what was I doing' questions or getting recent context.",
+		title: "List Recent Notes",
+		description: "Get the most recent notes. Perfect for 'what was I doing' questions or getting recent context.",
 		inputSchema: z.object({
-			limit: z.number().optional().describe("Number of recent dumps to show (default: according to config)")
+			limit: z.number().optional().describe("Number of recent notes to show (default: according to config)")
 		})
 	},
 	async ({ limit }) => {
-		const fluxDir = findFluxDirectory();
-		if (!fluxDir) {
+		const bbDir = findBBDirectory();
+		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found." }]
+				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found." }]
 			};
 		}
 
 		try {
-			const output = safeExec("flux s", fluxDir);
+			const output = safeExec("bb s", bbDir);
 
 			if (limit && output) {
 				const lines = output.split('\n');
@@ -232,13 +232,13 @@ server.registerTool(
 			}
 
 			return {
-				content: [{ type: "text", text: output || "No recent brain dumps found." }]
+				content: [{ type: "text", text: output || "No recent notes found." }]
 			};
 		} catch (error) {
 			return {
 				content: [{
 					type: "text",
-					text: ` Failed to list recent dumps: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: ` Failed to list recent notes: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}
@@ -248,31 +248,31 @@ server.registerTool(
 server.registerTool(
 	"get_status",
 	{
-		title: "Get Flux-Cap Status",
-		description: "Check flux-cap status, current git context, and project information.",
+		title: "Get Backbrain Status",
+		description: "Check Backbrain status, current git context, and project information.",
 		inputSchema: z.object({})
 	},
 	async () => {
-		const fluxDir = findFluxDirectory();
-		if (!fluxDir) {
+		const bbDir = findBBDirectory();
+		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Flux-cap not initialized. No .flux directory found." }]
+				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found." }]
 			};
 		}
 
 		try {
-			let status = "Flux-cap Status\n\n";
-			status += ` Project Directory: ${fluxDir}\n`;
+			let status = "Backbrain Status\n\n";
+			status += ` Project Directory: ${bbDir}\n`;
 
 			try {
-				const branch = safeExec("git branch --show-current", fluxDir, { suppressErrors: true });
+				const branch = safeExec("git branch --show-current", bbDir, { suppressErrors: true });
 				status += `Git Branch: ${branch || "Not in git repo"}\n`;
 			} catch {
 				status += "Git Branch: Not in git repo\n";
 			}
 
 			try {
-				const config = safeExec("flux config", fluxDir, { suppressErrors: true });
+				const config = safeExec("bb config", bbDir, { suppressErrors: true });
 				const configLines = config.split('\n').slice(0, 3);
 				status += `\nConfiguration:\n${configLines.join('\n')}\n`;
 			} catch {

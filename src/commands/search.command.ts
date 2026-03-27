@@ -3,10 +3,10 @@ import Fuse from "fuse.js";
 import type { BrainDump } from "../types";
 import {
 	displaySearchResults,
-	FLUX_BRAIN_DUMP_PATH,
+	BB_DUMP_PATH,
 	getAllBrainDumpFilePaths,
 	getConfigFile,
-	getFluxPath,
+	getBBPath,
 	getMonthString,
 	searchResultFormat,
 } from "../utils";
@@ -20,9 +20,9 @@ export async function searchBrainDumpCommand(
 	specificListOfFiles: string[] | null = null,
 	aiMode: boolean = false
 ) {
-	if (!returnResults) console.log("Searching all brain dumps...");
-	const fluxPath = await getFluxPath();
-	const config = await getConfigFile(fluxPath);
+	if (!returnResults) console.log("Searching all notes...");
+	const bbPath = await getBBPath();
+	const config = await getConfigFile(bbPath);
 	const combinedQuery = query.join(" ").trim();
 
 	const searchResults: Array<{
@@ -34,7 +34,7 @@ export async function searchBrainDumpCommand(
 			final: Number;
 		}
 	}> = [];
-	const allFilePaths = specificListOfFiles ? specificListOfFiles : await getAllBrainDumpFilePaths(fluxPath);
+	const allFilePaths = specificListOfFiles ? specificListOfFiles : await getAllBrainDumpFilePaths(bbPath);
 
 	if (combinedQuery) {
 		for (const searchQuery of query) {

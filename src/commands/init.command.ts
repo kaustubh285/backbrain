@@ -1,26 +1,25 @@
 import fs from "fs";
 import inquirer from "inquirer";
-import { createIfNotExists, getFluxPath } from "../utils/";
+import { createIfNotExists, getBBPath } from "../utils/";
 import {
-	FLUX_BRAIN_DUMP_PATH,
-	FLUX_CONFIG_PATH,
-	FLUX_DEFAULT_CONFIG,
-	FLUX_FOLDER_PATH,
-	FLUX_SESSION_PATH,
+	BB_DUMP_PATH,
+	BB_CONFIG_PATH,
+	BB_DEFAULT_CONFIG,
+	BB_FOLDER_PATH,
+	BB_SESSION_PATH,
 } from "../utils/constants";
 
-export async function initFluxCommand(options: { yes?: boolean }) {
-	console.log("Initializing Flux Capacitor...");
+export async function initBBCommand(options: { yes?: boolean }) {
 
 	// CRITICAL SECTION
 	try {
-		// Check if .flux folder exists
-		await createIfNotExists(FLUX_FOLDER_PATH, "directory");
-		await createIfNotExists(FLUX_BRAIN_DUMP_PATH, "directory");
-		await createIfNotExists(FLUX_SESSION_PATH, "directory");
+		// Check if .bb folder exists
+		await createIfNotExists(BB_FOLDER_PATH, "directory");
+		await createIfNotExists(BB_DUMP_PATH, "directory");
+		await createIfNotExists(BB_SESSION_PATH, "directory");
 
 		// Check if config.json exists
-		const config = FLUX_DEFAULT_CONFIG;
+		const config = BB_DEFAULT_CONFIG;
 		let answers: {
 			includeWorkingDir: any;
 			includeBranch: any;
@@ -61,7 +60,7 @@ export async function initFluxCommand(options: { yes?: boolean }) {
 		config.privacy.hideUncommittedChanges = !answers.includeUncommitted;
 
 		await createIfNotExists(
-			FLUX_CONFIG_PATH,
+			BB_CONFIG_PATH,
 			"file",
 			JSON.stringify(config, null, 4),
 		);
@@ -87,37 +86,37 @@ export async function initFluxCommand(options: { yes?: boolean }) {
 			console.log("Gitignore file exists");
 			const gitignoreContent = fs.readFileSync(".gitignore", "utf8");
 
-			if (gitignoreContent.includes(FLUX_FOLDER_PATH)) {
-				console.log(".flux is already in .gitignore");
+			if (gitignoreContent.includes(BB_FOLDER_PATH)) {
+				console.log(".bb is already in .gitignore");
 			} else {
-				fs.appendFileSync(".gitignore", `\n${FLUX_FOLDER_PATH}`);
+				fs.appendFileSync(".gitignore", `\n${BB_FOLDER_PATH}`);
 			}
 		} else {
-			fs.writeFileSync(".gitignore", ".flux");
+			fs.writeFileSync(".gitignore", ".bb");
 			console.log("Created .gitignore file.");
 		}
 	} catch (error) {
 		console.error(
-			`Error during git setup: ${error}. \n You may need to manually add .flux/ to your .gitignore file.`,
+			`Error during git setup: ${error}. \n You may need to manually add .bb/ to your .gitignore file.`,
 		);
 	}
 
 	console.log(
-		`Flux Cap folder structure created at ${FLUX_FOLDER_PATH}, with cwd as ${process.cwd()}`,
+		`Backbrain folder structure created at ${BB_FOLDER_PATH}, with cwd as ${process.cwd()}`,
 	);
-	console.log("Flux Capacitor initialized successfully!");
+	console.log("Backbrain initialized successfully!");
 }
 
-export const resetFluxCommand = async () => {
-	console.log("Resetting Flux Capacitor...");
-	const fluxPath = (await getFluxPath()) + FLUX_FOLDER_PATH;
+export const resetBBCommand = async () => {
+	console.log("Resetting Backbrain...");
+	const bbPath = (await getBBPath()) + BB_FOLDER_PATH;
 
 	const { confirmed } = await inquirer.prompt([
 		{
 			type: "confirm",
 			name: "confirmed",
 			message:
-				"Are you sure? This will delete all your brain dumps and sessions.",
+				"Are you sure? This will delete all your notes and sessions.",
 			default: false,
 		},
 	]);
@@ -128,16 +127,16 @@ export const resetFluxCommand = async () => {
 	}
 
 	try {
-		if (fs.existsSync(fluxPath)) {
-			fs.rmSync(fluxPath, { recursive: true, force: true });
-			console.log("Removed .flux directory and all its contents.");
+		if (fs.existsSync(bbPath)) {
+			fs.rmSync(bbPath, { recursive: true, force: true });
+			console.log("Removed .bb directory and all its contents.");
 		} else {
-			console.log("Flux Capacitor is not initialized in this repository.");
+			console.log("Backbrain is not initialized in this repository.");
 		}
 	} catch (error) {
 		console.error("Error during reset:", error);
 		process.exit(1);
 	}
 
-	console.log("Flux Capacitor reset successfully!");
+	console.log("Backbrain reset successfully!");
 };

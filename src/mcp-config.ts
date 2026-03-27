@@ -1,10 +1,10 @@
 export const mcpSetupCommand = async () => {
-	console.log("Flux-Cap MCP Integration Setup!!");
+	console.log("Backbrain MCP Integration Setup!!");
 
 	const mcpConfig = {
 		mcpServers: {
-			"flux-cap": {
-				command: "flux",
+			"backbrain": {
+				command: "bb",
 				args: ["mcp-server"],
 				env: {}
 			}
@@ -17,7 +17,7 @@ export const mcpSetupCommand = async () => {
 };
 
 export const mcpServerCommand = () => {
-	console.log("Starting Flux-Cap MCP Server...");
+	console.log("Starting Backbrain MCP Server...");
 
 	import("./mcp-server").catch((err) => {
 		console.error("Failed to start MCP server:", err);

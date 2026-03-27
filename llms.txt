@@ -1,7 +1,7 @@
-# llms.txt for flux-cap
-# A git-aware CLI context manager for ADHD developers with AI integration
+# llms.txt for Backbrain
+# A git-aware developer journal with AI integration
 # Project: https://github.com/kaustubh285/flux-cap
-# Package: @dev_desh/flux-cap
+# Package: @dev_desh/flux-cap (Backbrain, formerly flux-cap)
 # Generated: 2026-01-08
 
 **Latest:** v1.1 - MCP Integration for AI assistants + Search 2.0 multi-signal ranking
@@ -10,15 +10,15 @@
 
 ## PROJECT OVERVIEW
 
-**Name:** flux-cap
-**Description:** Git-aware CLI context manager for ADHD developers with AI assistant integration
+**Name:** Backbrain (formerly flux-cap)
+**Description:** Git-aware developer journal with AI assistant integration
 **Version:** 1.1.0
 **Author:** Kaustubh Deshpande
 **License:** MIT
 **Repository:** https://github.com/kaustubh285/flux-cap
 **NPM Package:** @dev_desh/flux-cap
 
-**Purpose:** A terminal-native tool that captures developer thoughts, tracks context, and integrates seamlessly with git workflow AND AI assistants. Built specifically for developers who context-switch frequently and need to maintain mental state across interruptions. Now enables AI agents to access and manage brain dumps as shared context.
+**Purpose:** A terminal-native tool that captures developer thoughts, tracks context, and integrates seamlessly with git workflow AND AI assistants. Built specifically for developers who context-switch frequently and need to maintain mental state across interruptions. Now enables AI agents to access and manage notes as shared context.
 
 **Target Users:** Software developers using AI assistants (Cursor, Claude, Zed), particularly those with ADHD or frequent context-switching needs
 
@@ -28,21 +28,26 @@
 
 ### Primary Commands:
 
-1. **flux init** - Initialize with privacy setup
-2. **flux dump [message] [options]** - Capture brain dumps with git context
+1. **bb init** - Initialize with privacy setup
+2. **bb note [message] [options]** - Capture notes with git context
    - Tags: `-i` (ideas), `-n` (notes), `-t` (tasks), `-b` (bugs), `-l` (links), `-d` (ideas alt)
    - Options: `-m` (multiline), `--tag <custom>`
-3. **flux search [query]** - Search 2.0 with intelligent ranking
-4. **flux u** - Interactive TUI search interface
-5. **flux mcp** - Setup AI assistant integration (NEW v1.1)
-6. **flux mcp-server** - MCP server for IDE integration (NEW v1.1)
-7. **flux config** - View/update configuration
-8. **flux reset** - Complete data reset
+3. **bb search [query]** - Search 2.0 with intelligent ranking
+4. **bb u** - Interactive TUI search interface
+5. **bb mcp-config** - Setup AI assistant integration
+6. **bb mcp-server** - MCP server for IDE integration
+7. **bb config** - View/update configuration
+8. **bb reset** - Complete data reset
+
+### Legacy Commands (Deprecated):
+- **flux dump** → Use **bb note** (backwards compatible)
+- **flux d** → Use **bb note** (backwards compatible)
+- **flux** → Use **bb** (backwards compatible)
 
 ### NEW: AI Assistant Integration (v1.1)
 
 **MCP (Model Context Protocol) Integration:**
-- AI assistants can directly access your brain dumps
+- AI assistants can directly access your notes
 - AI can capture insights from conversations
 - Seamless context sharing between CLI and AI tools
 
@@ -52,15 +57,15 @@
 - Claude Desktop (config file)
 
 **MCP Tools Available to AI:**
-1. `find_flux_directory` - Locate flux project
-2. `search_dumps` - Search brain dumps with intelligent ranking
-3. `add_dump` - Capture new brain dumps with smart tagging
+1. `find_flux_directory` - Locate Backbrain project
+2. `search_notes` - Search notes with intelligent ranking
+3. `add_note` - Capture new notes with smart tagging
 4. `list_recent` - Show recent activity
-5. `get_status` - Check flux-cap and git status
+5. `get_status` - Check Backbrain and git status
 
 ### Key Features:
 
-- **Brain Dump System:** Instant thought capture without breaking development flow
+- **Developer Journal System:** Instant thought capture without breaking development flow
 - **Search 2.0:** Multi-signal ranking (fuzzy + recency + git context)
 - **Interactive TUI:** Real-time search with Rezi-based interface
 - **AI Integration:** MCP server for AI assistant access
@@ -84,13 +89,13 @@
 ```
 .flux/
 ├── config.json          # Configuration
-├── dumps/               # Monthly brain dump files
+├── dumps/               # Monthly note files
 │   ├── 2026-01.json
 │   └── 2026-02.json
 └── sessions/            # Future: Focus session tracking
 ```
 
-**Brain Dump Format:**
+**Note Entry Format:**
 ```json
 {
   "id": "uuid",
@@ -117,12 +122,12 @@
 
 **When to Use Each Tool:**
 
-1. **search_dumps**: User asks about past work, needs context, seems stuck
+1. **search_notes**: User asks about past work, needs context, seems stuck
    - "What was I working on with auth?"
    - "What bugs did I find in payments?"
-   - Always search before suggesting new dumps
+   - Always search before suggesting new notes
 
-2. **add_dump**: User mentions actionable items, shares insights
+2. **add_note**: User mentions actionable items, shares insights
    - Tag appropriately: `-t` (tasks), `-i` (ideas), `-n` (notes), `-b` (bugs), `-l` (links)
    - Use conversation context to determine correct tag
 
@@ -155,7 +160,7 @@ AI: 1. Search "UI" for related past ideas
 ## DEVELOPMENT HISTORY
 
 ### Recent Releases:
-- **v1.1.0:** MCP Integration for AI assistants
+- **v1.1.0:** MCP Integration for AI assistants + Backbrain rebrand
 - **v1.0.0:** First stable release with Rezi TUI
 - **v0.10.0:** Rezi-based lazygit-style TUI
 - **v0.9.0:** Ink-powered interactive search TUI
@@ -178,31 +183,31 @@ AI: 1. Search "UI" for related past ideas
 ### AI-Enhanced Workflow:
 ```
 Developer: "I'm debugging the payment system"
-AI: *searches brain dumps*
+AI: *searches notes*
     "I found 3 payment-related issues from your notes.
      The timeout issue from last week might be related -
      you noted checking Redis configuration helped."
 AI: *captures current work*
-    "I've saved this debugging session to your brain dumps."
+    "I've saved this debugging session to your notes."
 ```
 
 ### Traditional CLI Usage:
 ```bash
 # Context switching
-flux dump -t "debugging auth middleware, next: rate limiting"
-flux search "auth"  # After interruption
+bb note -t "debugging auth middleware, next: rate limiting"
+bb search "auth"  # After interruption
 
 # Idea capture
-flux dump -i "add keyboard shortcuts to dashboard"
+bb note -i "add keyboard shortcuts to dashboard"
 
 # Bug tracking
-flux dump -b "payment flow fails on mobile Safari"
-flux search "payment mobile"  # Later retrieval
+bb note -b "payment flow fails on mobile Safari"
+bb search "payment mobile"  # Later retrieval
 ```
 
 ### Interactive TUI:
 ```bash
-flux u  # Real-time search interface
+bb u  # Real-time search interface
 # Type query → See results instantly
 # /exit to quit
 ```
@@ -244,12 +249,13 @@ flux u  # Real-time search interface
 - Interactive TUI with Rezi
 - Custom tag support
 - Parent directory discovery
+- Backbrain rebrand with backwards compatibility
 
 ### Phase 2 (v1.2):
 - Enhanced AI context tools
 - Search result pagination
 - Tag-based filtering
-- Export formats for AI tools
+- Convenience commands (bb recent, bb here, bb notes)
 
 ### Phase 3 (Future):
 - Advanced git context switching
@@ -262,9 +268,9 @@ flux u  # Real-time search interface
 ## LLM USAGE & AI INTEGRATION
 
 **For AI Assistants:**
-- **Encouraged Use:** Access user brain dumps via MCP integration
-- **Smart Tagging:** Analyze conversation for appropriate dump categories
-- **Context Provision:** Search brain dumps to provide relevant background
+- **Encouraged Use:** Access user notes via MCP integration
+- **Smart Tagging:** Analyze conversation for appropriate note categories
+- **Context Provision:** Search notes to provide relevant background
 - **Proactive Capture:** Suggest capturing important conversation insights
 
 **For Training/Development:**
@@ -292,4 +298,4 @@ flux u  # Real-time search interface
 
 ---
 
-*This llms.txt represents flux-cap v1.1 with full AI integration capabilities. The tool is designed for seamless human-AI collaboration in software development contexts.*
+*This llms.txt represents Backbrain v1.1 with full AI integration capabilities. The tool is designed for seamless human-AI collaboration in software development contexts.*

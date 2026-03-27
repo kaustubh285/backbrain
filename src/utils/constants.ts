@@ -1,17 +1,17 @@
 import packageJson from "../../package.json";
 
-import type { FluxConfig } from "../types";
+import type { BBConfig } from "../types";
 
-export const FLUX_FOLDER_PATH = ".flux/";
+export const BB_FOLDER_PATH = ".bb/";
 
-export const FLUX_BRAIN_DUMP_PATH = `${FLUX_FOLDER_PATH}dumps/`;
+export const BB_DUMP_PATH = `${BB_FOLDER_PATH}dumps/`;
 
-export const FLUX_SESSION_PATH = `${FLUX_FOLDER_PATH}sessions/`;
+export const BB_SESSION_PATH = `${BB_FOLDER_PATH}sessions/`;
 
-export const FLUX_CONFIG_PATH = `${FLUX_FOLDER_PATH}config.json`;
+export const BB_CONFIG_PATH = `${BB_FOLDER_PATH}config.json`;
 
-export const FLUX_DEFAULT_CONFIG: FluxConfig = {
-	fluxVersion: packageJson.version,
+export const BB_DEFAULT_CONFIG: BBConfig = {
+	bbVersion: packageJson.version,
 	defaultFocusDuration: 1500, // 25 minutes
 	todoKeywords: ["TODO", "FIXME", "BUG", "OPTIMIZE", "HACK"],
 	notifications: true,
@@ -30,9 +30,9 @@ export const FLUX_DEFAULT_CONFIG: FluxConfig = {
 			includeScore: true,
 		},
 	},
-	tags: ["notes", "ideas", "tasks", "bugs", "links", "imporatant"],
+	tags: ["notes", "ideas", "tasks", "bugs", "links", "imporatant", "ai"],
 };
 
-export const FLUX_DEFAULT_BRAIN_DUMP_CONTENT = {
-	fluxVersion: "0.0.1",
+export const BB_DEFAULT_BRAIN_DUMP_CONTENT = {
+	bbVersion: packageJson.version,
 };

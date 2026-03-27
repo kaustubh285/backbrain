@@ -64,10 +64,10 @@ export function displaySearchResults(
 ) {
 	if (results.length === 0) {
 		if (query) {
-			console.log(`\n No brain dumps found matching "${query}"\n`);
+			console.log(`\n No notes found matching "${query}"\n`);
 		} else {
 			console.log(
-				"\nNo brain dumps found. Try 'flux dump' to create your first one!\n",
+				"\nNo notes found. Try 'bb note' to create your first one!\n",
 			);
 		}
 		return;
@@ -133,7 +133,7 @@ export function displaySearchResults(
 	});
 
 	console.log(
-		`\n\x1b[90m Tip: Use the 8-character ID to reference dumps (e.g., flux edit ${results[0]?.item.id.substring(0, 8)})\x1b[0m\n`,
+		`\n\x1b[90m Tip: Use the 8-character ID to reference dumps (e.g., bb edit ${results[0]?.item.id.substring(0, 8)})\x1b[0m\n`,
 	);
 }
 

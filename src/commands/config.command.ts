@@ -1,15 +1,15 @@
-import { FLUX_CONFIG_PATH } from "../utils";
-import { getConfigFile, getFluxPath } from "../utils/lib";
+import { BB_CONFIG_PATH } from "../utils";
+import { getConfigFile, getBBPath } from "../utils/lib";
 
 export async function configCommand(data: string[]) {
 	console.log(`Updating key: ${data[0]} to ${data[1]}`);
-	const fluxPath = await getFluxPath();
+	const bbPath = await getBBPath();
 	const fs = await import("fs");
-	const config = await getConfigFile(fluxPath);
+	const config = await getConfigFile(bbPath);
 
 	if (data.length < 2) {
 		console.log(
-			"Please provide a key and value to update the config. Example: flux config --add-tags notes ideas tasks",
+			"Please provide a key and value to update the config. Example: bb config --add-tags notes ideas tasks",
 		);
 		return;
 	}
@@ -84,7 +84,7 @@ export async function configCommand(data: string[]) {
 	}
 
 	fs.writeFileSync(
-		fluxPath + FLUX_CONFIG_PATH,
+		bbPath + BB_CONFIG_PATH,
 		JSON.stringify(config, null, 4),
 	);
 

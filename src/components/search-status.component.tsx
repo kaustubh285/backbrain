@@ -13,7 +13,7 @@ export const SearchStatus = ({
 	// console.log('Rendering SearchStatus with:', { searchTime, totalResults });
 	return (
 		<Box flexDirection="column" borderStyle="single" borderColor="gray" padding={1}>
-			<Text color="cyan" bold> Flux-Cap Interactive Search</Text>
+			<Text color="cyan" bold> BackBrain Interactive Search</Text>
 			<Text color="gray">
 				Results: {totalResults}
 				{searchTime && ` | Search: ${searchTime}ms`}
