@@ -2,8 +2,10 @@
 	"name": "@dev_desh/flux-cap",
 	"type": "module",
 	"version": "1.1.0",
-	"description": "Git-aware CLI context manager for ADHD developers",
+	"description": "Backbrain (formerly flux-cap): keep a running memory of your work, searchable from the CLI and readable by your AI",
 	"bin": {
+		"bb": "./dist/index.js",
+		"backbrain": "./dist/index.js",
 		"flux": "./dist/index.js",
 		"flux-mcp": "./dist/mcp-server.ts"
 	},
@@ -36,8 +38,11 @@
 		"adhd",
 		"git",
 		"context-switching",
-		"brain-dump",
-		"developer-tools"
+		"developer-journal",
+		"developer-tools",
+		"backbrain",
+		"notes",
+		"mcp"
 	],
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.28.0",

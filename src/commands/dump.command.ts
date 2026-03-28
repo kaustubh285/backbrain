@@ -1,17 +1,17 @@
 import { editor } from "@inquirer/prompts";
 import { randomUUID } from "crypto";
-import type { BrainDump, BrainDumpOptions, FluxConfig } from "../types";
+import type { BrainDump, BrainDumpOptions, BBConfig } from "../types";
 import {
 	createBrainDumpFileIfNotExists,
 	getConfigFile,
 	getCurrentBranch,
-	getFluxPath,
+	getBBPath,
 	getGitUncommittedChanges,
 	getMonthString,
 	getTags,
 	getWorkingDir,
 } from "../utils/";
-import { FLUX_BRAIN_DUMP_PATH, FLUX_CONFIG_PATH } from "../utils/constants";
+import { BB_DUMP_PATH, BB_CONFIG_PATH } from "../utils/constants";
 
 export async function handleBrainDump(
 	message: string[],
@@ -25,20 +25,20 @@ export async function handleBrainDump(
 			const initialText = message ? message.join(" ") : "";
 
 			const multilineInput = await editor({
-				message: "Enter your brain dump (save & exit when done):",
+				message: "Enter your note (save & exit when done):",
 				default: initialText,
 				waitForUserInput: false,
 			});
 
 			if (!multilineInput.trim()) {
-				console.log("Brain dump cancelled - no content provided");
+				console.log("Note cancelled - no content provided");
 				return;
 			}
 
 			finalMessage = multilineInput.trim();
 		} else {
 			if (!message || message.length === 0) {
-				console.log('Please provide a message: flux dump "your message"');
+				console.log('Please provide a message: bb note "your message"');
 				return;
 			}
 			finalMessage = message.join(" ");
@@ -47,7 +47,7 @@ export async function handleBrainDump(
 		await brainDumpAddCommand(finalMessage, options);
 	} catch (error) {
 		console.error(
-			"Error creating brain dump:",
+			"Error creating note:",
 			error instanceof Error ? error.message : "Unknown error",
 		);
 		process.exit(1);
@@ -56,17 +56,17 @@ export async function handleBrainDump(
 
 export async function brainDumpAddCommand(
 	message: string,
-	options: BrainDumpOptions = {},
+	options: BrainDumpOptions,
 ) {
-	const fluxPath = await getFluxPath();
+	const bbPath = await getBBPath();
 	const fs = await import("fs");
 
-	console.log("Creating brain dump...");
+	console.log("Creating note...");
 
 	const monthString = getMonthString();
-	await createBrainDumpFileIfNotExists(monthString, fluxPath);
+	await createBrainDumpFileIfNotExists(monthString, bbPath);
 
-	const config = await getConfigFile(fluxPath);
+	const config = await getConfigFile(bbPath);
 	const workingDir = await getWorkingDir(config);
 	const branch = getCurrentBranch(config);
 	const hasUncommittedChanges = getGitUncommittedChanges(config);
@@ -84,7 +84,7 @@ export async function brainDumpAddCommand(
 
 	const data: { dumps: BrainDump[] } = JSON.parse(
 		fs.readFileSync(
-			`${fluxPath}${FLUX_BRAIN_DUMP_PATH}/${monthString}.json`,
+			`${bbPath}${BB_DUMP_PATH}/${monthString}.json`,
 			"utf8",
 		),
 	);
@@ -92,7 +92,7 @@ export async function brainDumpAddCommand(
 	config.sorted ? data.dumps.unshift(newDump) : data.dumps.push(newDump);
 
 	fs.writeFileSync(
-		`${fluxPath}${FLUX_BRAIN_DUMP_PATH}/${monthString}.json`,
+		`${bbPath}${BB_DUMP_PATH}/${monthString}.json`,
 		JSON.stringify(data, null, 2),
 	);
 
@@ -103,5 +103,5 @@ export async function brainDumpAddCommand(
 		? `${message.split("\n")[0]}... (multiline)`
 		: displayMessage;
 
-	console.log(` Brain dump saved: "${preview}"`);
+	console.log(` Note saved: "${preview}"`);
 }

@@ -1,17 +1,17 @@
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import type { FluxConfig } from "../types";
-import { FLUX_BRAIN_DUMP_PATH, FLUX_CONFIG_PATH } from "./constants";
-
-export async function getFluxPath() {
+import type { BBConfig } from "../types";
+import { BB_DUMP_PATH, BB_CONFIG_PATH } from "./constants";
+import packageJson from "../../package.json";
+export async function getBBPath() {
 	const cwd = process.cwd();
 
 	const fullPath = cwd.split(path.sep);
 	while (true) {
-		const parentPath = fullPath.join(path.sep) + "/.flux";
+		const parentPath = fullPath.join(path.sep) + "/.bb";
 		if (fs.existsSync(parentPath)) {
-			return parentPath.split(".flux")[0];
+			return parentPath.split(".bb")[0];
 			break;
 		}
 		fullPath.pop();
@@ -20,7 +20,7 @@ export async function getFluxPath() {
 		}
 	}
 	console.error(
-		"No .flux directory found in the current or parent directories. Please run 'flux init' to initialize.",
+		"No .bb directory found in the current or parent directories. Please run 'bb init' or 'backbrain init' to initialize.",
 	);
 	process.exit(1);
 }
@@ -83,43 +83,43 @@ export async function createIfNotExists(
 
 export async function createBrainDumpFileIfNotExists(
 	dateString: string,
-	fluxPath?: string,
+	bbPath?: string,
 ) {
 	await createIfNotExists(
-		`${fluxPath}${FLUX_BRAIN_DUMP_PATH}${dateString}.json`,
+		`${bbPath}${BB_DUMP_PATH}${dateString}.json`,
 		"file",
 		JSON.stringify({
-			fluxVersion: "0.0.1",
+			bbVersion: packageJson.version,
 			month: dateString,
 			dumps: [],
 		}),
 	);
 }
 
-export async function getConfigFile(fluxPath?: string): Promise<FluxConfig> {
+export async function getConfigFile(bbPath?: string): Promise<BBConfig> {
 	const fs = await import("fs");
-	const configPath = `${fluxPath}${FLUX_CONFIG_PATH}`;
-	const config: FluxConfig = JSON.parse(fs.readFileSync(configPath, "utf8"));
+	const configPath = `${bbPath}${BB_CONFIG_PATH}`;
+	const config: BBConfig = JSON.parse(fs.readFileSync(configPath, "utf8"));
 	return config;
 }
 
 export async function getAllBrainDumpFilePaths(
-	fluxPath?: string,
+	bbPath?: string,
 ): Promise<string[]> {
 	const fs = await import("fs");
 	const path = await import("path");
-	const files = fs.readdirSync(fluxPath + FLUX_BRAIN_DUMP_PATH);
+	const files = fs.readdirSync(bbPath + BB_DUMP_PATH);
 	return files
 		.filter((file) => file.endsWith(".json"))
-		.map((file) => path.join(fluxPath + FLUX_BRAIN_DUMP_PATH, file));
+		.map((file) => path.join(bbPath + BB_DUMP_PATH, file));
 }
 
 export async function init() {
-	const fluxPath = await getFluxPath();
-	const config = await getConfigFile(fluxPath);
+	const bbPath = await getBBPath();
+	const config = await getConfigFile(bbPath);
 
 	return {
-		fluxPath,
+		bbPath,
 		config,
 	};
 }

@@ -4,57 +4,78 @@ import packageJson from "../package.json";
 import { configCommand } from "./commands/config.command";
 import { brainDumpAddCommand, handleBrainDump } from "./commands/dump.command";
 import { helpOption } from "./commands/flux.option";
-import { initFluxCommand, resetFluxCommand } from "./commands/init.command";
+import { initBBCommand, resetBBCommand } from "./commands/init.command";
 import { searchBrainDumpCommand } from "./commands/search.command";
-import { getFluxPath } from "./utils";
+import { getBBPath } from "./utils";
 import { searchV2Command } from "./commands/search.v2.command";
 import { tuiCommandInk, tuiCommandRezi } from "./commands/ui.command";
 import { mcpServerCommand, mcpSetupCommand } from "./mcp-config";
 const program = new Command();
 
 program
-	.name(`flux`)
-	.description("Git-aware CLI context manager for ADHD developers")
+	.name(`bb`)
+	.description("Backbrain: keep a running memory of your work, searchable from the CLI and readable by your AI")
 	.version(packageJson.version);
 
 program
 	.command("i")
 	.alias("init")
 	.option("-y, --yes", "Accept all default options for initialization")
-	.description("Initialize flux in the current repository")
-	.action(initFluxCommand);
+	.description("Initialize BackBrain in the current repository")
+	.action(initBBCommand);
 
 program
 	.command("reset")
-	.description("Resets flux in the current repository")
-	.action(resetFluxCommand);
+	.description("Resets BackBrain in the current repository")
+	.action(resetBBCommand);
 
 
+program
+	.command("note [message...]")
+	.alias("n")
+	.option("-m, --multiline", "Enable multiline input mode")
+	.option("-n, --notes", "Tag as note")
+	.option("-i, --important", "Tag as important")
+	.option("-d, --ideas", "Tag as idea")
+	.option("-t, --tasks", "Tag as task")
+	.option("-b, --bugs", "Tag as bug")
+	.option("-l, --links", "Tag as link")
+	.option("-a, --ai", "AI-generated note")
+	.option("--tag [custom]", "Add custom tag")
+	.description(
+		"Add a note with a message. Use --multiline for multi-line input.",
+	)
+	.action(async (message, options) => {
+		await handleBrainDump(message, options);
+	});
+
+// Legacy alias for backwards compatibility (deprecated)
 program
 	.command("d [message...]")
 	.alias("dump")
 	.option("-m, --multiline", "Enable multiline input mode")
-	.option("-n, --notes", "Jot down a note")
-	.option("-i, --important", "Jot down a link")
-	.option("-d, --ideas", "Jot down an idea")
-	.option("-t, --tasks", "Jot down a task")
-	.option("-b, --bugs", "Jot down a bug")
-	.option("-l, --links", "Jot down a link")
-	.option("-a, --ai", "AI jotted down something for you")
-	.option("--tag [custom]", "Jot down a custom tagged")
+	.option("-n, --notes", "Tag as note")
+	.option("-i, --important", "Tag as important")
+	.option("-d, --ideas", "Tag as idea")
+	.option("-t, --tasks", "Tag as task")
+	.option("-b, --bugs", "Tag as bug")
+	.option("-l, --links", "Tag as link")
+	.option("-a, --ai", "AI-generated note")
+	.option("--tag [custom]", "Add custom tag")
 	.description(
-		"Add a brain dump with a message. Use --multiline for multi-line input.",
+		"[DEPRECATED] Use 'bb note' instead. Add a note with a message.",
 	)
 	.action(async (message, options) => {
 		await handleBrainDump(message, options);
 	});
 
 program
-	.command("s [query...]")
-	.alias("search")
+	.command("search [query...]")
+	.alias("s")
 	.description(
-		"Search brain dumps with smart ranking. Examples:\n" +
-		"  flux s auth        # Find auth-related dumps"
+		"Search notes with smart ranking. Examples:\n" +
+		"  bb search auth     # Find auth-related notes\n" +
+		"  bb s payment       # Search payment notes"
 	)
 	.action((query?: string[]) => {
 		searchBrainDumpCommand(query ? query : [""]);
@@ -64,14 +85,14 @@ program
 program
 	.command("config [data...]")
 	.description(
-		"Update configuration fields. Example: flux config search.limit 10",
+		"Update configuration fields. Example: bb config search.limit 10",
 	)
 	.action(configCommand);
 
 
 program
 	.command("mcp-config")
-	.description("Help configure MCP server for Flux-cap")
+	.description("Help configure MCP server for Backbrain")
 	.action(async () => {
 		await mcpSetupCommand();
 	});

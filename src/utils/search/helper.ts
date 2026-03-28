@@ -1,7 +1,7 @@
-import type { BrainDump, FluxConfig } from "../../types";
+import type { BrainDump, BBConfig } from "../../types";
 import { getCurrentBranch, getGitUncommittedChanges, getWorkingDir } from "../privacy";
 
-export const searchV2Helper = async (config: FluxConfig, searchResults: {
+export const searchV2Helper = async (config: BBConfig, searchResults: {
 	item: BrainDump;
 	score?: number;
 }[]) => {

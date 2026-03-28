@@ -1,5 +1,5 @@
-export type FluxConfig = {
-	fluxVersion: string;
+export type BBConfig = {
+	bbVersion: string;
 	defaultFocusDuration: number;
 	todoKeywords: string[];
 	notifications: boolean;

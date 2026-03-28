@@ -1,15 +1,15 @@
 import React from 'react';
 import { render } from 'ink';
 import { SearchApp } from '../components/search.components';
-import { FluxTui } from '@/components/search.rezi';
+import { BBTui } from '@/components/search.rezi';
 
 export async function tuiCommandRezi() {
-	console.log('\n Starting Flux-Cap Interactive Search...\n');
+	console.log('\n Starting Backbrain Interactive Search...\n');
 	// render(React.createElement(SearchApp));
-	await FluxTui()
+	await BBTui()
 }
 
 export async function tuiCommandInk() {
-	console.log('\n Starting Flux-Cap Interactive Search...\n');
+	console.log('\n Starting Backbrain Interactive Search...\n');
 	render(React.createElement(SearchApp));
 }
