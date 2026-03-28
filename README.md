@@ -1,4 +1,4 @@
-# Backbrain
+# Backbrain (formerly flux-cap)
 
 > Backbrain: keep a running memory of your work, searchable from the CLI and readable by your AI.
 
