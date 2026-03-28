@@ -1,7 +1,7 @@
 {
 	"name": "backbrain",
 	"type": "module",
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"description": "Backbrain (formerly flux-cap): keep a running memory of your work, searchable from the CLI and readable by your AI",
 	"bin": {
 		"bb": "./dist/index.js",

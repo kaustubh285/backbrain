@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 1.1.5
+
+### Patch Changes
+
+- 07568e3: Use spawnSync and sanitize inputs in MCP server
+
 ## 1.1.1
 
 ### Patch Changes
