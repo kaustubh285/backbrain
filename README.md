@@ -1,10 +1,29 @@
 # Backbrain (formerly flux-cap)
 
+[![npm version](https://img.shields.io/npm/v/backbrain)](https://www.npmjs.com/package/backbrain)
+[![npm downloads](https://img.shields.io/npm/dm/backbrain)](https://www.npmjs.com/package/backbrain)
+[![license](https://img.shields.io/npm/l/backbrain)](LICENSE)
+
 > Backbrain: keep a running memory of your work, searchable from the CLI and readable by your AI.
 
 *Backbrain was previously called flux-cap. The CLI `flux` still works as an alias, but `bb` is now the primary command.*
 
+
 ---
+## Installation
+
+Install Backbrain globally using your preferred package manager:
+
+```bash
+# Using npm
+npm install -g backbrain
+
+# Using pnpm  
+pnpm install -g backbrain
+
+# Using bun
+bun install -g backbrain
+```
 
 ### How this was built
 
@@ -13,10 +32,6 @@ Backbrain is a personal project built incrementally over several weeks — not g
 The commit history tells the story better than this paragraph.
 
 ---
-
-[![npm version](https://img.shields.io/npm/v/backbrain)](https://www.npmjs.com/package/backbrain)
-[![npm downloads](https://img.shields.io/npm/dm/backbrain)](https://www.npmjs.com/package/backbrain)
-[![license](https://img.shields.io/npm/l/backbrain)](LICENSE)
 
 **Now at v1.1.0** — with Search 2.0 multi-signal ranking, interactive TUI, and MCP integration for AI assistants.
 
@@ -38,21 +53,6 @@ Backbrain is a git-aware developer journal that keeps a running memory of your w
 - **AI Integration** - MCP server for seamless AI assistant access (Cursor, Claude, Zed)
 - **Git-aware** - Automatically tracks branch context and uncommitted changes
 - **Local & Private** - All data stored locally in human-readable JSON
-
-## Installation
-
-Install Backbrain globally using your preferred package manager:
-
-```bash
-# Using npm
-npm install -g backbrain
-
-# Using pnpm  
-pnpm install -g backbrain
-
-# Using bun
-bun install -g backbrain
-```
 
 ## Quick Start
 
