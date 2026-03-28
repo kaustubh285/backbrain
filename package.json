@@ -35,14 +35,28 @@
 	"keywords": [
 		"cli",
 		"productivity",
-		"adhd",
 		"git",
 		"context-switching",
 		"developer-journal",
 		"developer-tools",
 		"backbrain",
 		"notes",
-		"mcp"
+		"mcp",
+		"command-line",
+		"workflow",
+		"memory",
+		"search",
+		"ai-tools",
+		"developer-workflow",
+		"code-context",
+		"project-management",
+		"task-tracking",
+		"work-log",
+		"searchable-notes",
+		"terminal",
+		"logbook",
+		"logs",
+		"development-tools"
 	],
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.28.0",
@@ -69,7 +83,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/kaustubh285/flux-cap"
+		"url": "https://github.com/kaustubh285/backbrain"
 	},
 	"license": "MIT"
 }
