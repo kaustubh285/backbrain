@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 1.1.1
+
+### Patch Changes
+
+- e483aff: REVAMP flux-cap to BackBrain
+
 ## 1.1.0
 
 ### Minor Changes
