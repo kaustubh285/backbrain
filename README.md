@@ -14,9 +14,9 @@ The commit history tells the story better than this paragraph.
 
 ---
 
-[![npm version](https://img.shields.io/npm/v/@dev_desh/flux-cap)](https://www.npmjs.com/package/@dev_desh/flux-cap)
-[![npm downloads](https://img.shields.io/npm/dm/@dev_desh/flux-cap)](https://www.npmjs.com/package/@dev_desh/flux-cap)
-[![license](https://img.shields.io/npm/l/@dev_desh/flux-cap)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/backbrain)](https://www.npmjs.com/package/backbrain)
+[![npm downloads](https://img.shields.io/npm/dm/backbrain)](https://www.npmjs.com/package/backbrain)
+[![license](https://img.shields.io/npm/l/backbrain)](LICENSE)
 
 **Now at v1.1.0** — with Search 2.0 multi-signal ranking, interactive TUI, and MCP integration for AI assistants.
 
@@ -45,13 +45,13 @@ Install Backbrain globally using your preferred package manager:
 
 ```bash
 # Using npm
-npm install -g @dev_desh/flux-cap
+npm install -g backbrain
 
 # Using pnpm  
-pnpm install -g @dev_desh/flux-cap
+pnpm install -g backbrain
 
 # Using bun
-bun install -g @dev_desh/flux-cap
+bun install -g backbrain
 ```
 
 ## Quick Start
@@ -100,7 +100,7 @@ bb notes                         # All note-tagged entries
 
 Backbrain includes a terminal user interface for interactive searching:
 
-![TUI Interface](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.10-rezi-interactive.png)
+![TUI Interface](https://github.com/kaustubh285/backbrain/blob/main/images/v0.10-rezi-interactive.png)
 
 ### Features
 - **Real-time Search**: Results update as you type
@@ -124,7 +124,7 @@ bb u
 
 Backbrain now integrates with AI assistants via MCP (Model Context Protocol):
 
-![MCP Integration](https://github.com/kaustubh285/flux-cap/blob/main/images/mcp-integration.png)
+![MCP Integration](https://github.com/kaustubh285/backbrain/blob/main/images/mcp-integration.png)
 
 ### What This Gives You:
 - **Shared Memory**: AI agents can access your notes as context
@@ -155,13 +155,13 @@ Add it to:
 ## Screenshots
 
 ### CLI Search
-![CLI Search](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.8-search-v2-demo.png)
+![CLI Search](https://github.com/kaustubh285/backbrain/blob/main/images/v0.8-search-v2-demo.png)
 
 ### Interactive TUI  
-![TUI Interface](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.10-rezi-interactive.png)
+![TUI Interface](https://github.com/kaustubh285/backbrain/blob/main/images/v0.10-rezi-interactive.png)
 
 ### TUI Demo
-![TUI Demo](https://github.com/kaustubh285/flux-cap/blob/main/images/v0.10-rezi-interactive.gif)
+![TUI Demo](https://github.com/kaustubh285/backbrain/blob/main/images/v0.10-rezi-interactive.gif)
 
 ## Commands
 
@@ -409,8 +409,8 @@ Want to contribute or run locally?
 
 ```bash
 # Clone and setup
-git clone https://github.com/kaustubh285/flux-cap
-cd flux-cap
+git clone https://github.com/kaustubh285/backbrain
+cd backbrain
 bun install
 
 # Run in development mode

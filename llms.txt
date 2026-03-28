@@ -1,7 +1,7 @@
 # llms.txt for Backbrain
 # A git-aware developer journal with AI integration
-# Project: https://github.com/kaustubh285/flux-cap
-# Package: @dev_desh/flux-cap (Backbrain, formerly flux-cap)
+# Project: https://github.com/kaustubh285/backbrain
+# Package: backbrain (Backbrain, formerly flux-cap)
 # Generated: 2026-01-08
 
 **Latest:** v1.1 - MCP Integration for AI assistants + Search 2.0 multi-signal ranking
@@ -15,8 +15,8 @@
 **Version:** 1.1.0
 **Author:** Kaustubh Deshpande
 **License:** MIT
-**Repository:** https://github.com/kaustubh285/flux-cap
-**NPM Package:** @dev_desh/flux-cap
+**Repository:** https://github.com/kaustubh285/backbrain
+**NPM Package:** backbrain
 
 **Purpose:** A terminal-native tool that captures developer thoughts, tracks context, and integrates seamlessly with git workflow AND AI assistants. Built specifically for developers who context-switch frequently and need to maintain mental state across interruptions. Now enables AI agents to access and manage notes as shared context.
 
