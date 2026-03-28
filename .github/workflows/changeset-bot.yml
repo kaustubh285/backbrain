@@ -170,7 +170,7 @@ jobs:
           # Create the changeset file with proper YAML frontmatter
           cat > ".changeset/${FILENAME}.md" << 'CHANGESET_EOF'
           ---
-          "@dev_desh/flux-cap": ${{ steps.generate-changeset.outputs.version_type }}
+          "backbrain": ${{ steps.generate-changeset.outputs.version_type }}
           ---
 
           ${{ steps.generate-changeset.outputs.description }}
