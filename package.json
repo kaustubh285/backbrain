@@ -20,7 +20,7 @@
 		"prepublishOnly": "bun run build",
 		"publish": "npm publish --access=public",
 		"local-install": "bun run build && npm link",
-		"local-uninstall": "npm unlink -g flux-cap",
+		"local-uninstall": "npm unlink -g bb",
 		"local-reinstall": "bun run local-uninstall && bun run local-install",
 		"changeset": "changeset",
 		"changeset:add": "changeset add",

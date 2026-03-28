@@ -53,6 +53,6 @@ DATA LOCATION:
 LEGACY SUPPORT:
   The 'bb' command still works but is deprecated. Use 'bb' instead.
 
-For more information, visit: https://github.com/kaustubh285/flux-cap
+For more information, visit: https://github.com/kaustubh285/backbrain
   `);
 }
