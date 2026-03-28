@@ -1,10 +1,8 @@
 #!/usr/bin/env bun
-// ASSISTED BY AI: This file sets up an MCP server that integrates with the Backbrain CLI tool. It provides two main functionalities:
-// 1. Finding the nearest .bb directory to ensure that Backbrain is initialized and available.
-// 2. Searching notes using the bb search command, with intelligent ranking based on relevance, recency, and git context.
+// ASSISTED BY AI: This file sets up an MCP server that integrates with the Backbrain CLI tool.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
 import { z } from "zod";
 import packageJson from "../package.json";
 
@@ -13,19 +11,37 @@ const server = new McpServer({
 	version: packageJson.version,
 });
 
-const safeExec = (command: string, workingDir?: string, options: { suppressErrors?: boolean } = {}) => {
+const safeExecArgs = (command: string, args: string[] = [], workingDir?: string, options: { suppressErrors?: boolean } = {}) => {
 	try {
-		return execSync(command, {
+		const result = spawnSync(command, args, {
 			cwd: workingDir || process.cwd(),
 			encoding: "utf8",
 			stdio: options.suppressErrors ? "pipe" : ["inherit", "pipe", "pipe"]
-		}).toString().trim();
+		});
+
+		if (result.error) {
+			throw result.error;
+		}
+
+		if (result.status !== 0 && !options.suppressErrors) {
+			throw new Error(`Command failed with status ${result.status}: ${result.stderr}`);
+		}
+
+		return result.stdout ? result.stdout.toString().trim() : '';
 	} catch (error) {
 		if (options.suppressErrors) {
 			return `Error: ${error instanceof Error ? error.message : 'Command failed'}`;
 		}
 		throw error;
 	}
+};
+
+const sanitizeInput = (input: string): string => {
+	return input.replace(/[;&|`$(){}[\]\\<>]/g, '').trim();
+};
+
+const validateInputLength = (input: string, maxLength: number = 1000): boolean => {
+	return input.length <= maxLength;
 };
 
 const findBBDirectory = () => {
@@ -102,13 +118,22 @@ server.registerTool(
 		const bbDir = findBBDirectory();
 		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found." }]
+				content: [{ type: "text", text: "❌ Backbrain not initialized. No .bb directory found." }]
 			};
 		}
 
 		try {
-			const cmd = query ? `bb s "${query.replace(/"/g, '\\"')}"` : "bb s";
-			const output = safeExec(cmd, bbDir);
+			if (query && !validateInputLength(query)) {
+				return {
+					content: [{ type: "text", text: "❌ Query too long. Please use a shorter search term." }]
+				};
+			}
+
+			const sanitizedQuery = query ? sanitizeInput(query) : "";
+
+			const args = sanitizedQuery ? ["s", sanitizedQuery] : ["s"];
+			const output = safeExecArgs("bb", args, bbDir);
+
 			return {
 				content: [{
 					type: "text",
@@ -119,7 +144,7 @@ server.registerTool(
 			return {
 				content: [{
 					type: "text",
-					text: ` Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: `❌ Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}
@@ -161,43 +186,73 @@ server.registerTool(
 		const bbDir = findBBDirectory();
 		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found. User needs to run 'bb init' first." }]
+				content: [{ type: "text", text: "❌ Backbrain not initialized. No .bb directory found. User needs to run 'bb init' first." }]
 			};
 		}
 
-		let cmd = "bb d";
-
-		if (tag) {
-			cmd += ` -${tag}`;
-		} else if (customTag) {
-			cmd += ` --tag ${customTag}`;
-		}
-
-		if (multiline) {
-			cmd += " -m";
-		}
-
-		const escapedMessage = message.replace(/"/g, '\\"');
-		cmd += ` "${escapedMessage}"`;
-
 		try {
-			const output = safeExec(cmd, bbDir);
-			const tagLabel = tag ? `[${tag}]` : customTag ? `[${customTag}]` : '';
+			if (!validateInputLength(message, 10000)) {
+				return {
+					content: [{ type: "text", text: "❌ Message too long. Please use a shorter message." }]
+				};
+			}
+
+			if (customTag && !validateInputLength(customTag, 50)) {
+				return {
+					content: [{ type: "text", text: "❌ Custom tag too long. Please use a shorter tag name." }]
+				};
+			}
+
+			const sanitizedMessage = message;
+			let sanitizedCustomTag = "";
+
+			if (customTag) {
+				sanitizedCustomTag = customTag.replace(/[^a-zA-Z0-9\-_]/g, '');
+				if (sanitizedCustomTag !== customTag) {
+					return {
+						content: [{ type: "text", text: "❌ Custom tag contains invalid characters. Use only letters, numbers, hyphens, and underscores." }]
+					};
+				}
+			}
+
+			const args = ["d"];
+
+			if (tag) {
+				if (!["i", "n", "t", "b", "l", "d", "a"].includes(tag)) {
+					return {
+						content: [{ type: "text", text: "❌ Invalid predefined tag." }]
+					};
+				}
+				args.push(`-${tag}`);
+			} else if (sanitizedCustomTag) {
+				args.push("--tag", sanitizedCustomTag);
+			}
+
+			if (multiline) {
+				args.push("-m");
+			}
+
+			args.push(sanitizedMessage);
+
+			const output = safeExecArgs("bb", args, bbDir);
+			const tagLabel = tag ? `[${tag}]` : sanitizedCustomTag ? `[${sanitizedCustomTag}]` : '';
+
 			return {
 				content: [{
 					type: "text",
-					text: ` Note captured ${tagLabel}\n${output || `"${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}`
+					text: `📝 Note captured ${tagLabel}\n${output || `"${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}`
 				}]
 			};
 		} catch (error) {
 			return {
 				content: [{
 					type: "text",
-					text: ` Failed to capture note: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: `❌ Failed to capture note: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}
 	}
+
 );
 
 server.registerTool(
@@ -218,7 +273,7 @@ server.registerTool(
 		}
 
 		try {
-			const output = safeExec("bb s", bbDir);
+			const output = safeExecArgs("bb", ["s"], bbDir);
 
 			if (limit && output) {
 				const lines = output.split('\n');
@@ -265,14 +320,15 @@ server.registerTool(
 			status += ` Project Directory: ${bbDir}\n`;
 
 			try {
-				const branch = safeExec("git branch --show-current", bbDir, { suppressErrors: true });
+				const branch = safeExecArgs("git", ["branch", "--show-current"], bbDir, { suppressErrors: true });
+
 				status += `Git Branch: ${branch || "Not in git repo"}\n`;
 			} catch {
 				status += "Git Branch: Not in git repo\n";
 			}
 
 			try {
-				const config = safeExec("bb config", bbDir, { suppressErrors: true });
+				const config = safeExecArgs("bb", ["config"], bbDir, { suppressErrors: true });
 				const configLines = config.split('\n').slice(0, 3);
 				status += `\nConfiguration:\n${configLines.join('\n')}\n`;
 			} catch {
