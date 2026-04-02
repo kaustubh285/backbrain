@@ -1,5 +1,11 @@
 # @dev_desh/flux-cap
 
+## 1.2.0
+
+### Minor Changes
+
+- 110d022: Prune UI deps and add .npmignore
+
 ## 1.1.5
 
 ### Patch Changes
