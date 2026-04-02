@@ -8,7 +8,7 @@ import { initBBCommand, resetBBCommand } from "./commands/init.command";
 import { searchBrainDumpCommand } from "./commands/search.command";
 import { getBBPath } from "./utils";
 import { searchV2Command } from "./commands/search.v2.command";
-import { tuiCommandInk, tuiCommandRezi } from "./commands/ui.command";
+import { tuiCommandRezi } from "./commands/ui.command";
 import { mcpServerCommand, mcpSetupCommand } from "./mcp-config";
 const program = new Command();
 
@@ -72,13 +72,14 @@ program
 program
 	.command("search [query...]")
 	.alias("s")
+	.option("--ai", "Output in AI-optimized format for MCP server")
 	.description(
 		"Search notes with smart ranking. Examples:\n" +
 		"  bb search auth     # Find auth-related notes\n" +
 		"  bb s payment       # Search payment notes"
 	)
-	.action((query?: string[]) => {
-		searchBrainDumpCommand(query ? query : [""]);
+	.action((query?: string[], options?: { ai?: boolean }) => {
+		searchBrainDumpCommand(query ? query : [""], false, undefined, null, options?.ai || false);
 	});
 
 // .alias("cfg")
@@ -109,10 +110,5 @@ program
 	.alias("ui")
 	.description("Open interactive search TUI built using rezi")
 	.action(tuiCommandRezi);
-
-program
-	.command("ui-ink")
-	.description("Open interactive search TUI built using ink")
-	.action(tuiCommandInk);
 
 program.parse(process.argv);

@@ -37,15 +37,13 @@ export async function searchBrainDumpCommand(
 	const allFilePaths = specificListOfFiles ? specificListOfFiles : await getAllBrainDumpFilePaths(bbPath);
 
 	if (combinedQuery) {
-		for (const searchQuery of query) {
-			for await (const filePath of allFilePaths) {
-				const fileData: { dumps: BrainDump[] } = JSON.parse(
-					fs.readFileSync(filePath, "utf8"),
-				);
-				const fuse = createFuseInstance(fileData.dumps, config);
-				const results = fuse.search(searchQuery);
-				searchResults.push(...await searchV2Helper(config, results));
-			}
+		for await (const filePath of allFilePaths) {
+			const fileData: { dumps: BrainDump[] } = JSON.parse(
+				fs.readFileSync(filePath, "utf8"),
+			);
+			const fuse = createFuseInstance(fileData.dumps, config);
+			const results = fuse.search(combinedQuery);
+			searchResults.push(...await searchV2Helper(config, results));
 		}
 	} else {
 		for await (const filePath of allFilePaths) {
@@ -69,25 +67,37 @@ export async function searchBrainDumpCommand(
 		}
 	}
 
+	const resultLimit = searchResultLimit ? searchResultLimit : config?.search?.resultLimit || (combinedQuery ? 10 : 5);
+
+	const uniqueResults = new Map();
+	for (const result of searchResults) {
+		const id = result.item.id;
+		if (!uniqueResults.has(id) ||
+			Number(result.scores?.final || 0) > Number(uniqueResults.get(id).scores?.final || 0)) {
+			uniqueResults.set(id, result);
+		}
+	}
+	const deduplicatedResults = Array.from(uniqueResults.values());
+
+
 	if (combinedQuery) {
-		searchResults.sort((a, b) => Number(b.scores?.final || 0) - Number(a.scores?.final || 0));
+		deduplicatedResults.sort((a, b) => Number(b.scores?.final || 0) - Number(a.scores?.final || 0));
 	} else {
-		searchResults.sort((a, b) => {
+		deduplicatedResults.sort((a, b) => {
 			const timeA = new Date(a.item.timestamp).getTime();
 			const timeB = new Date(b.item.timestamp).getTime();
 			return timeB - timeA;
 		});
 	}
 
-	const resultLimit = searchResultLimit ? searchResultLimit : config?.search?.resultLimit || (combinedQuery ? 10 : 5);
-	const limitedResults = searchResults.slice(0, resultLimit);
+	const limitedResults = deduplicatedResults.slice(0, resultLimit);
 
 	if (returnResults) {
 		return limitedResults;
 	}
-	if (searchResults.length > limitedResults.length) {
+	if (deduplicatedResults.length > limitedResults.length) {
 		console.log(
-			`\n(Showing ${limitedResults.length} of ${searchResults.length} results)`,
+			`\n(Showing ${limitedResults.length} of ${deduplicatedResults.length} results)`,
 		);
 	}
 
@@ -96,8 +106,8 @@ export async function searchBrainDumpCommand(
 		// TODO : CHECK TOON FORMAT FOR TOKEN OPTIMIZATION
 		const aiOutput = {
 			query: combinedQuery || "recent",
-			total_results: searchResults.length,
-			results: searchResults.slice(0, searchResultLimit || 10).map((result, index) => ({
+			total_results: limitedResults.length,
+			results: limitedResults.slice(0, searchResultLimit || 10).map((result, index) => ({
 				rank: index + 1,
 				id: result.item.id.slice(0, 8),
 				message: result.item.message,

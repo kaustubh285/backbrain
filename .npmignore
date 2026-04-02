@@ -1,0 +1,74 @@
+# Source files - only include built dist/
+src/
+*.ts
+*.tsx
+tsconfig.json
+
+# Development dependencies and tools
+node_modules/
+.biome.json
+biome.json
+
+# Development and build artifacts
+.env
+.env.*
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+test/
+tests/
+__tests__/
+*.test.*
+*.spec.*
+coverage/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation development
+docs/
+*.md
+!README.md
+
+# Changeset files (for publishing)
+.changeset/
+
+# Bun specific
+bun.lockb
+
+# Development scripts that aren't needed in production
+scripts/
+.husky/
+
+# Component files not needed in production (UI disabled)
+src/components/
+
+# Development configuration
+.eslintrc.*
+.prettierrc.*
+jest.config.*
+vitest.config.*
+
+# Temporary files
+tmp/
+temp/

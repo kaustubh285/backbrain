@@ -11,15 +11,30 @@ const server = new McpServer({
 	version: packageJson.version,
 });
 
-const safeExecArgs = (command: string, args: string[] = [], workingDir?: string, options: { suppressErrors?: boolean } = {}) => {
+
+const getBBDirectory = (): string | null => {
+	const fs = require("fs");
+	const path = require("path");
+
+	const cwd = process.cwd();
+	const bbDir = path.join(cwd, '.bb');
+
+	return fs.existsSync(bbDir) ? cwd : null;
+};
+
+const safeExecArgs = (command: string, args: string[] = [], workingDir?: string, options: { suppressErrors?: boolean; timeout?: number } = {}) => {
 	try {
 		const result = spawnSync(command, args, {
 			cwd: workingDir || process.cwd(),
 			encoding: "utf8",
-			stdio: options.suppressErrors ? "pipe" : ["inherit", "pipe", "pipe"]
+			stdio: options.suppressErrors ? "pipe" : ["pipe", "pipe", "pipe"],
+			timeout: options.timeout || 10000 // 10 second default timeout
 		});
 
 		if (result.error) {
+			if (result.error.code === 'ETIMEDOUT') {
+				throw new Error('Command timed out after 30 seconds');
+			}
 			throw result.error;
 		}
 
@@ -44,46 +59,61 @@ const validateInputLength = (input: string, maxLength: number = 1000): boolean =
 	return input.length <= maxLength;
 };
 
-const findBBDirectory = () => {
-	const fs = require("fs");
-	const path = require("path");
 
-	let currentDir = process.cwd();
-	const root = path.parse(currentDir).root;
-
-	while (currentDir !== root) {
-		const bbDir = path.join(currentDir, '.bb');
-		if (fs.existsSync(bbDir)) {
-			return currentDir;
-		}
-		currentDir = path.dirname(currentDir);
-	}
-	return null;
-};
 
 server.registerTool(
 	"find_bb_directory",
 	{
 		title: "Find BackBrain Directory",
 		description: "Locate the nearest .bb directory by traversing up the directory tree. Use this first to ensure Backbrain is available.",
-		inputSchema: z.object({})
+		inputSchema: z.object({
+			startPath: z.string().optional().describe("Optional starting directory to search from (defaults to MCP server's working directory)")
+		})
 	},
-	async () => {
+	async ({ startPath }) => {
 		try {
-			const bbDir = findBBDirectory();
-			return {
-				content: [{
-					type: "text",
-					text: bbDir
-						? `Found bb directory: ${bbDir}`
-						: " No .bb directory found. User needs to run 'bb init' in their project."
-				}]
-			};
+
+			let originalCwd = process.cwd();
+			if (startPath) {
+				try {
+					process.chdir(startPath);
+				} catch (error) {
+					return {
+						content: [{
+							type: "text",
+							text: `❌ Cannot access directory: ${startPath}\n${error instanceof Error ? error.message : 'Invalid path'}`
+						}]
+					};
+				}
+			}
+
+			const bbDir = getBBDirectory();
+
+			if (startPath) {
+				process.chdir(originalCwd);
+			}
+
+			if (bbDir) {
+				return {
+					content: [{
+						type: "text",
+						text: `✅ Found bb directory: ${bbDir}\n📁 Cached for future operations.`
+					}]
+				};
+			} else {
+				const currentPath = startPath || process.cwd();
+				return {
+					content: [{
+						type: "text",
+						text: `❌ No .bb directory found in: ${currentPath}\n💡 User needs to run 'bb init' in their project directory.`
+					}]
+				};
+			}
 		} catch (error) {
 			return {
 				content: [{
 					type: "text",
-					text: ` Error finding bb directory: ${error instanceof Error ? error.message : 'Unknown error'}`
+					text: `❌ Error finding bb directory: ${error instanceof Error ? error.message : 'Unknown error'}`
 				}]
 			};
 		}
@@ -115,10 +145,10 @@ server.registerTool(
 		})
 	},
 	async ({ query = "" }) => {
-		const bbDir = findBBDirectory();
+		const bbDir = getBBDirectory();
 		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: "❌ Backbrain not initialized. No .bb directory found." }]
+				content: [{ type: "text", text: `❌ Backbrain not initialized in current directory: ${process.cwd()}\n💡 Run 'bb init' in this directory or switch to a directory with .bb folder.` }]
 			};
 		}
 
@@ -131,7 +161,7 @@ server.registerTool(
 
 			const sanitizedQuery = query ? sanitizeInput(query) : "";
 
-			const args = sanitizedQuery ? ["s", sanitizedQuery] : ["s"];
+			const args = sanitizedQuery ? ["s", "--ai", sanitizedQuery] : ["s", "--ai"];
 			const output = safeExecArgs("bb", args, bbDir);
 
 			return {
@@ -183,10 +213,10 @@ server.registerTool(
 		})
 	},
 	async ({ message, tag, customTag, multiline }) => {
-		const bbDir = findBBDirectory();
+		const bbDir = getBBDirectory();
 		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: "❌ Backbrain not initialized. No .bb directory found. User needs to run 'bb init' first." }]
+				content: [{ type: "text", text: `❌ Backbrain not initialized in current directory: ${process.cwd()}\n💡 Run 'bb init' in this directory or switch to a directory with .bb folder.` }]
 			};
 		}
 
@@ -234,7 +264,7 @@ server.registerTool(
 
 			args.push(sanitizedMessage);
 
-			const output = safeExecArgs("bb", args, bbDir);
+			const output = safeExecArgs("bb", args, bbDir, { timeout: 15000 });
 			const tagLabel = tag ? `[${tag}]` : sanitizedCustomTag ? `[${sanitizedCustomTag}]` : '';
 
 			return {
@@ -252,7 +282,6 @@ server.registerTool(
 			};
 		}
 	}
-
 );
 
 server.registerTool(
@@ -265,10 +294,10 @@ server.registerTool(
 		})
 	},
 	async ({ limit }) => {
-		const bbDir = findBBDirectory();
+		const bbDir = getBBDirectory();
 		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found." }]
+				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found. Try using find_bb_directory with startPath parameter to specify your project directory." }]
 			};
 		}
 
@@ -308,10 +337,10 @@ server.registerTool(
 		inputSchema: z.object({})
 	},
 	async () => {
-		const bbDir = findBBDirectory();
+		const bbDir = getBBDirectory();
 		if (!bbDir) {
 			return {
-				content: [{ type: "text", text: " Backbrain not initialized. No .bb directory found." }]
+				content: [{ type: "text", text: `❌ Backbrain not initialized in current directory: ${process.cwd()}\n💡 Run 'bb init' in this directory or switch to a directory with .bb folder.` }]
 			};
 		}
 
